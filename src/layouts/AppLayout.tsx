@@ -1,0 +1,86 @@
+import { NavLink, Outlet } from "react-router";
+import { roleLabels } from "../constants/authLabels";
+import { useAuthStore } from "../stores/authStore";
+
+export default function AppLayout() {
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+
+  if (!user) return null;
+
+  return (
+    <div className="min-h-dvh lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
+      <a
+        href="#contenido"
+        className="sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:not-sr-only focus:rounded-lg focus:bg-surface focus:px-4 focus:py-3 focus:text-brand"
+      >
+        Saltar al contenido
+      </a>
+
+      <aside className="bg-brand text-white">
+        <div className="px-6 py-6 lg:px-8 lg:py-8">
+          <p className="text-3xl font-bold tracking-wide">SGAF</p>
+
+          <p className="mt-2 text-sm text-white/80">
+            Gestión académica y financiera
+          </p>
+
+          <div
+            aria-hidden="true"
+            className="mt-5 h-1 w-12 rounded-full bg-accent"
+          />
+        </div>
+
+        <nav aria-label="Navegación principal" className="px-4 pb-6">
+          <NavLink
+            to="/cuenta"
+            end
+            className={({ isActive }) =>
+              [
+                "block rounded-xl px-4 py-3 text-sm font-semibold",
+                "transition-colors",
+                "focus-visible:outline-2 focus-visible:outline-offset-2",
+                "focus-visible:outline-white",
+                isActive
+                  ? "bg-accent-soft text-brand"
+                  : "text-white/90 hover:bg-brand-hover",
+              ].join(" ")
+            }
+          >
+            Mi cuenta
+          </NavLink>
+        </nav>
+      </aside>
+
+      <div className="min-w-0">
+        <header className="border-b border-border bg-surface px-4 py-4 sm:px-8">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
+            <div className="min-w-0">
+              <p className="text-sm text-ink/70">{roleLabels[user.role]}</p>
+
+              <p className="mt-1 break-words font-semibold text-brand">
+                {user.firstName} {user.lastName}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={logout}
+              className="rounded-lg border border-brand px-4 py-2 text-sm font-medium text-brand transition-colors hover:bg-brand hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            >
+              Cerrar sesión
+            </button>
+          </div>
+        </header>
+
+        <main
+          id="contenido"
+          tabIndex={-1}
+          className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8"
+        >
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}

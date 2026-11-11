@@ -1,78 +1,73 @@
+import { roleLabels, statusLabels } from "../constants/authLabels";
 import { useAuthStore } from "../stores/authStore";
-import type { UserRole, UserStatus } from "../types/auth";
-
-const roleLabels: Record<UserRole, string> = {
-  ADMIN: "Administrador",
-  RECEPCIONIST: "Recepción",
-  TEACHER: "Docente",
-  STUDENT: "Estudiante",
-};
-
-const statusLabels: Record<UserStatus, string> = {
-  ACTIVE: "Activo",
-  PENDING_APPROVAL: "Pendiente de aprobación",
-  SUSPEND_FOR_DEBT: "Suspendido por mora",
-  INACTIVE: "Inactivo",
-};
 
 export default function AccountPage() {
   const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
 
   if (!user) return null;
 
   return (
-    <main className="mx-auto min-h-dvh max-w-4xl px-4 py-8 sm:px-8">
-      <header className="flex flex-wrap items-center justify-between gap-4">
-        <p className="text-2xl font-bold text-brand">SGAF</p>
-
-        <button
-          type="button"
-          onClick={logout}
-          className="rounded-lg border border-brand px-4 py-2 font-medium text-brand hover:bg-brand hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+    <section aria-labelledby="account-title">
+      <div className="mb-6">
+        <h1
+          id="account-title"
+          className="text-2xl font-bold text-brand sm:text-3xl"
         >
-          Cerrar sesión
-        </button>
-      </header>
+          Mi cuenta
+        </h1>
 
-      <section className="mt-8 rounded-2xl border border-border bg-surface p-6 sm:p-8">
-        <h1 className="text-2xl font-semibold text-brand">Mi cuenta</h1>
+        <p className="mt-2 text-ink/70">
+          Consulta tus datos y el estado de tu cuenta.
+        </p>
+      </div>
+
+      <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
+        <h2 className="text-lg font-semibold text-brand">
+          Información personal
+        </h2>
 
         <dl className="mt-6 grid gap-6 sm:grid-cols-2">
           <div>
-            <dt className="text-sm">Nombre completo</dt>
-            <dd className="mt-1 font-medium">
+            <dt className="text-sm text-ink/70">Nombre completo</dt>
+            <dd className="mt-1 break-words font-medium">
               {user.firstName} {user.lastName}
             </dd>
           </div>
 
           <div>
-            <dt className="text-sm">Correo electrónico</dt>
+            <dt className="text-sm text-ink/70">Correo electrónico</dt>
             <dd className="mt-1 break-words font-medium">{user.email}</dd>
           </div>
 
           <div>
-            <dt className="text-sm">Rol</dt>
+            <dt className="text-sm text-ink/70">Rol</dt>
             <dd className="mt-1 font-medium">{roleLabels[user.role]}</dd>
           </div>
 
           <div>
-            <dt className="text-sm">Estado</dt>
-            <dd className="mt-1 font-medium">{statusLabels[user.status]}</dd>
+            <dt className="text-sm text-ink/70">Estado</dt>
+            <dd className="mt-2">
+              <span className="inline-flex rounded-full border border-border bg-canvas px-3 py-1 text-sm font-medium">
+                {statusLabels[user.status]}
+              </span>
+            </dd>
           </div>
         </dl>
+      </div>
 
-        {user.status === "SUSPEND_FOR_DEBT" && (
-          <p
-            role="status"
-            className="mt-6 rounded-lg bg-warning-soft p-4 text-warning"
-          >
-            Tienes obligaciones vencidas. Puedes consultar tus finanzas y
-            regularizar tus pagos. Las nuevas inscripciones y entregas están
-            bloqueadas.
+      {user.status === "SUSPEND_FOR_DEBT" && (
+        <div
+          role="status"
+          className="mt-6 rounded-xl bg-warning-soft p-5 text-warning"
+        >
+          <p className="font-semibold">Tienes obligaciones vencidas</p>
+
+          <p className="mt-2 text-sm">
+            Las nuevas inscripciones y entregas están bloqueadas hasta
+            regularizar tus pagos.
           </p>
-        )}
-      </section>
-    </main>
+        </div>
+      )}
+    </section>
   );
 }

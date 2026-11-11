@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from "react-router";
+import AppLayout from "./layouts/AppLayout";
 import LoginPage from "./pages/LoginPage";
 import AccountPage from "./pages/AccountPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -15,7 +16,9 @@ export default function App() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/cuenta" element={<AccountPage />} />
+        <Route element={<AppLayout />}>
+          <Route path="/cuenta" element={<AccountPage />} />
+        </Route>
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
