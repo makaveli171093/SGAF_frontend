@@ -5,6 +5,7 @@ import AccountPage from "./pages/AccountPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import GuestRoute from "./routes/GuestRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import GroupsPage from "./pages/GroupsPage";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
           <Route path="/cuenta" element={<AccountPage />} />
+          <Route path="/grupos" element={<GroupsPage />} />
         </Route>
       </Route>
 

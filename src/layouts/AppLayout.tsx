@@ -2,6 +2,11 @@ import { NavLink, Outlet } from "react-router";
 import { roleLabels } from "../constants/authLabels";
 import { useAuthStore } from "../stores/authStore";
 
+const navigationItems = [
+  { to: "/cuenta", label: "Mi cuenta" },
+  { to: "/grupos", label: "Grupos académicos" },
+];
+
 export default function AppLayout() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
@@ -31,24 +36,27 @@ export default function AppLayout() {
           />
         </div>
 
-        <nav aria-label="Navegación principal" className="px-4 pb-6">
-          <NavLink
-            to="/cuenta"
-            end
-            className={({ isActive }) =>
-              [
-                "block rounded-xl px-4 py-3 text-sm font-semibold",
-                "transition-colors",
-                "focus-visible:outline-2 focus-visible:outline-offset-2",
-                "focus-visible:outline-white",
-                isActive
-                  ? "bg-accent-soft text-brand"
-                  : "text-white/90 hover:bg-brand-hover",
-              ].join(" ")
-            }
-          >
-            Mi cuenta
-          </NavLink>
+        <nav aria-label="Navegación principal" className="space-y-2 px-4 pb-6">
+          {navigationItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end
+              className={({ isActive }) =>
+                [
+                  "block rounded-xl px-4 py-3 text-sm font-semibold",
+                  "transition-colors",
+                  "focus-visible:outline-2 focus-visible:outline-offset-2",
+                  "focus-visible:outline-white",
+                  isActive
+                    ? "bg-accent-soft text-brand"
+                    : "text-white/90 hover:bg-brand-hover",
+                ].join(" ")
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
         </nav>
       </aside>
 
