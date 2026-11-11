@@ -6,6 +6,8 @@ import NotFoundPage from "./pages/NotFoundPage";
 import GuestRoute from "./routes/GuestRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import GroupsPage from "./pages/GroupsPage";
+import MyEnrollmentsPage from "./pages/MyEnrollmentsPage";
+import RoleRoute from "./routes/RoleRoute";
 
 export default function App() {
   return (
@@ -20,6 +22,10 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route path="/cuenta" element={<AccountPage />} />
           <Route path="/grupos" element={<GroupsPage />} />
+
+          <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
+            <Route path="/mis-inscripciones" element={<MyEnrollmentsPage />} />
+          </Route>
         </Route>
       </Route>
 

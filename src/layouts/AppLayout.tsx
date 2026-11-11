@@ -1,10 +1,22 @@
 import { NavLink, Outlet } from "react-router";
 import { roleLabels } from "../constants/authLabels";
 import { useAuthStore } from "../stores/authStore";
+import type { UserRole } from "../types/auth";
 
-const navigationItems = [
+interface NavigationItem {
+  to: string;
+  label: string;
+  roles?: UserRole[];
+}
+
+const navigationItems: NavigationItem[] = [
   { to: "/cuenta", label: "Mi cuenta" },
   { to: "/grupos", label: "Grupos académicos" },
+  {
+    to: "/mis-inscripciones",
+    label: "Mis inscripciones",
+    roles: ["STUDENT"],
+  },
 ];
 
 export default function AppLayout() {
@@ -12,6 +24,10 @@ export default function AppLayout() {
   const logout = useAuthStore((state) => state.logout);
 
   if (!user) return null;
+
+  const visibleNavigationItems = navigationItems.filter(
+    (item) => !item.roles || item.roles.includes(user.role),
+  );
 
   return (
     <div className="min-h-dvh lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
@@ -37,7 +53,7 @@ export default function AppLayout() {
         </div>
 
         <nav aria-label="Navegación principal" className="space-y-2 px-4 pb-6">
-          {navigationItems.map((item) => (
+          {visibleNavigationItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
