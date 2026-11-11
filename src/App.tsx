@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-
+import { Navigate, Route, Routes } from "react-router";
 import LoginPage from "./pages/LoginPage";
 import AccountPage from "./pages/AccountPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuthStore } from "./stores/authStore";
 
 export default function App() {
@@ -61,9 +63,30 @@ export default function App() {
     );
   }
 
-  if (sessionStatus === "authenticated" && user && accessToken) {
-    return <AccountPage />;
-  }
+  const isAuthenticated =
+    sessionStatus === "authenticated" && Boolean(user) && Boolean(accessToken);
 
-  return <LoginPage />;
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Navigate to={isAuthenticated ? "/cuenta" : "/login"} replace />
+        }
+      />
+
+      <Route
+        path="/login"
+        element={
+          isAuthenticated ? <Navigate to="/cuenta" replace /> : <LoginPage />
+        }
+      />
+
+      <Route element={<ProtectedRoute />}>
+        <Route path="/cuenta" element={<AccountPage />} />
+      </Route>
+
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
 }
