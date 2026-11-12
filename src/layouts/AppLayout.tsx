@@ -17,6 +17,11 @@ const navigationItems: NavigationItem[] = [
     label: "Mis inscripciones",
     roles: ["STUDENT"],
   },
+  {
+    to: "/mis-finanzas",
+    label: "Mis finanzas",
+    roles: ["STUDENT"],
+  },
 ];
 
 export default function AppLayout() {
@@ -82,7 +87,7 @@ export default function AppLayout() {
             <div className="min-w-0">
               <p className="text-sm text-ink/70">{roleLabels[user.role]}</p>
 
-              <p className="mt-1 break-words font-semibold text-brand">
+              <p className="mt-1 wrap-break-word font-semibold text-brand">
                 {user.firstName} {user.lastName}
               </p>
             </div>
