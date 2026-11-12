@@ -22,6 +22,11 @@ const navigationItems: NavigationItem[] = [
     label: "Mis finanzas",
     roles: ["STUDENT"],
   },
+  {
+    to: "/mis-tareas",
+    label: "Mis tareas",
+    roles: ["STUDENT"],
+  },
 ];
 
 export default function AppLayout() {

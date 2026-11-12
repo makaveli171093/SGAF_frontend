@@ -9,6 +9,7 @@ import GroupsPage from "./pages/GroupsPage";
 import MyEnrollmentsPage from "./pages/MyEnrollmentsPage";
 import RoleRoute from "./routes/RoleRoute";
 import MyFinancesPage from "./pages/MyFinancesPage";
+import MyAssignmentsPage from "./pages/MyAssignmentsPage";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
             <Route path="/mis-inscripciones" element={<MyEnrollmentsPage />} />
             <Route path="/mis-finanzas" element={<MyFinancesPage />} />
+            <Route path="/mis-tareas" element={<MyAssignmentsPage />} />
           </Route>
         </Route>
       </Route>
