@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import { getApiErrorMessage } from "../lib/apiError";
 import { assignmentsService } from "../services/assignments";
 import { useAuthStore } from "../stores/authStore";
-import type { StudentAssignment } from "../types/assignments";
+import type {
+  StudentAssignment,
+  StudentSubmission,
+} from "../types/assignments";
 
 export function useMyAssignments() {
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -63,5 +66,25 @@ export function useMyAssignments() {
     setRequestVersion((current) => current + 1);
   }
 
-  return { assignments, isLoading, error, checkedAt, reload };
+  function registerSubmission(
+    assignmentId: string,
+    submission: StudentSubmission,
+  ) {
+    setAssignments((current) =>
+      current.map((assignment) =>
+        assignment.id === assignmentId
+          ? { ...assignment, submissions: [submission] }
+          : assignment,
+      ),
+    );
+  }
+
+  return {
+    assignments,
+    isLoading,
+    error,
+    checkedAt,
+    reload,
+    registerSubmission,
+  };
 }

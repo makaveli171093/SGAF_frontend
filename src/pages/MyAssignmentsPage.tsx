@@ -1,4 +1,5 @@
 import { useMyAssignments } from "../hooks/useMyAssignments";
+import SubmissionForm from "../components/assignments/SubmissionForm";
 
 const dateFormatter = new Intl.DateTimeFormat("es-BO", {
   dateStyle: "medium",
@@ -29,8 +30,14 @@ function getAttachmentUrl(value: string | null): string | null {
 }
 
 export default function MyAssignmentsPage() {
-  const { assignments, isLoading, error, checkedAt, reload } =
-    useMyAssignments();
+  const {
+    assignments,
+    isLoading,
+    error,
+    checkedAt,
+    reload,
+    registerSubmission,
+  } = useMyAssignments();
 
   return (
     <section aria-labelledby="assignments-title">
@@ -223,6 +230,16 @@ export default function MyAssignmentsPage() {
                           )}
                         </div>
                       </div>
+                    )}
+
+                    {!submission && !isExpired && (
+                      <SubmissionForm
+                        assignmentId={assignment.id}
+                        dueDate={assignment.dueDate}
+                        onSubmitted={(createdSubmission) =>
+                          registerSubmission(assignment.id, createdSubmission)
+                        }
+                      />
                     )}
                   </article>
                 );
