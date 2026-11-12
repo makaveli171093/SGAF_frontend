@@ -1,5 +1,8 @@
 import { api } from "../lib/axios";
-import type { MyAssignmentsResponse } from "../types/assignments";
+import type {
+  MyAssignmentsResponse,
+  TeacherAssignmentsResponse,
+} from "../types/assignments";
 
 interface CreateAssignmentInput {
   groupId: string;
@@ -45,6 +48,22 @@ export const assignmentsService = {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
+      },
+    );
+
+    return response.data;
+  },
+  async getTeacherAssignments(
+    accessToken: string,
+    signal: AbortSignal,
+  ): Promise<TeacherAssignmentsResponse> {
+    const response = await api.get<TeacherAssignmentsResponse>(
+      "/assignments/teacher",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        signal,
       },
     );
 

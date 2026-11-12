@@ -11,6 +11,8 @@ import RoleRoute from "./routes/RoleRoute";
 import MyFinancesPage from "./pages/MyFinancesPage";
 import MyAssignmentsPage from "./pages/MyAssignmentsPage";
 import TeacherGroupsPage from "./pages/TeacherGroupsPage";
+import TeacherAssignmentsPage from "./pages/TeacherAssignmentsPage";
+import TeacherSubmissionsPage from "./pages/TeacherSubmissionsPage";
 
 export default function App() {
   return (
@@ -34,6 +36,15 @@ export default function App() {
 
           <Route element={<RoleRoute allowedRoles={["TEACHER"]} />}>
             <Route path="/docente/grupos" element={<TeacherGroupsPage />} />
+            <Route
+              path="/docente/tareas"
+              element={<TeacherAssignmentsPage />}
+            />
+
+            <Route
+              path="/docente/tareas/:assignmentId/entregas"
+              element={<TeacherSubmissionsPage />}
+            />
           </Route>
         </Route>
       </Route>

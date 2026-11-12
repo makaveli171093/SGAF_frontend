@@ -38,3 +38,47 @@ export interface MyAssignmentsResponse {
   message: string;
   assignments: StudentAssignment[];
 }
+
+export interface TeacherAssignment {
+  id: string;
+  tittle: string;
+  instructions: string;
+  dueDate: string;
+
+  group: {
+    id: string;
+    name: string;
+    subject: {
+      name: string;
+      code: string;
+    };
+    academicPeriod: {
+      name: string;
+    };
+  };
+
+  _count: {
+    submissions: number;
+  };
+}
+
+export interface TeacherAssignmentsResponse {
+  message: string;
+  assignments: TeacherAssignment[];
+}
+
+export interface TeacherSubmission extends StudentSubmission {
+  student: {
+    id: string;
+    enrollmentCode: string;
+    user: {
+      firstName: string;
+      lastName: string;
+    };
+  };
+}
+
+export interface AssignmentSubmissionsResponse {
+  message: string;
+  submissions: TeacherSubmission[];
+}

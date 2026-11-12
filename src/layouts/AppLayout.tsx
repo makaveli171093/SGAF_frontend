@@ -32,6 +32,11 @@ const navigationItems: NavigationItem[] = [
     label: "Mis grupos",
     roles: ["TEACHER"],
   },
+  {
+    to: "/docente/tareas",
+    label: "Tareas publicadas",
+    roles: ["TEACHER"],
+  },
 ];
 
 export default function AppLayout() {
