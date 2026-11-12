@@ -113,7 +113,9 @@ export default function CreateAssignmentForm({
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={(event) => {
+        void handleSubmit(onSubmit)(event);
+      }}
       aria-busy={isSubmitting}
       className="mt-4 space-y-4"
     >

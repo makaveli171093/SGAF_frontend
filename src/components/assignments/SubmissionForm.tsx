@@ -120,7 +120,9 @@ export default function SubmissionForm({
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={(event) => {
+        void handleSubmit(onSubmit)(event);
+      }}
       aria-busy={isSubmitting}
       className="mt-6 space-y-4 border-t border-border pt-5"
     >
