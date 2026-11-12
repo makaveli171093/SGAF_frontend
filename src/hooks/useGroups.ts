@@ -15,19 +15,11 @@ export function useGroups() {
   const [requestVersion, setRequestVersion] = useState(0);
 
   useEffect(() => {
-    if (!accessToken) {
-      setGroups([]);
-      setIsLoading(false);
-      return;
-    }
+    if (!accessToken) return;
 
     const controller = new AbortController();
 
     async function loadGroups(token: string) {
-      setIsLoading(true);
-      setError(null);
-      setGroups([]);
-
       try {
         const response = await groupsService.getAll(token, controller.signal);
 
@@ -61,13 +53,11 @@ export function useGroups() {
   }, [accessToken, logout, requestVersion]);
 
   function reload() {
+    setIsLoading(true);
+    setError(null);
+    setGroups([]);
     setRequestVersion((current) => current + 1);
   }
 
-  return {
-    groups,
-    isLoading,
-    error,
-    reload,
-  };
+  return { groups, isLoading, error, reload };
 }

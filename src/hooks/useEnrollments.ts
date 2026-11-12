@@ -15,19 +15,11 @@ export function useEnrollments() {
   const [requestVersion, setRequestVersion] = useState(0);
 
   useEffect(() => {
-    if (!accessToken) {
-      setEnrollments([]);
-      setIsLoading(false);
-      return;
-    }
+    if (!accessToken) return;
 
     const controller = new AbortController();
 
     async function loadEnrollments(token: string) {
-      setIsLoading(true);
-      setError(null);
-      setEnrollments([]);
-
       try {
         const response = await enrollmentsService.getMine(
           token,
@@ -64,6 +56,9 @@ export function useEnrollments() {
   }, [accessToken, logout, requestVersion]);
 
   function reload() {
+    setIsLoading(true);
+    setError(null);
+    setEnrollments([]);
     setRequestVersion((current) => current + 1);
   }
 
