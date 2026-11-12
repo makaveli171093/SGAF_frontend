@@ -15,6 +15,16 @@ interface CreateSubmissionResponse {
   submission: StudentSubmission;
 }
 
+interface GradeSubmissionInput {
+  grade: number;
+  feedback: string;
+}
+
+interface GradeSubmissionResponse {
+  message: string;
+  submission: StudentSubmission;
+}
+
 export const submissionsService = {
   async create(
     accessToken: string,
@@ -44,6 +54,23 @@ export const submissionsService = {
           Authorization: `Bearer ${accessToken}`,
         },
         signal,
+      },
+    );
+
+    return response.data;
+  },
+  async grade(
+    accessToken: string,
+    submissionId: string,
+    values: GradeSubmissionInput,
+  ): Promise<GradeSubmissionResponse> {
+    const response = await api.patch<GradeSubmissionResponse>(
+      `/submissions/${encodeURIComponent(submissionId)}/grade`,
+      values,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
     );
 

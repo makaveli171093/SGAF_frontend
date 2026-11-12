@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { Link, useLocation, useParams } from "react-router";
 import { useAuthenticatedQuery } from "../hooks/useAuthenticatedQuery";
 import { submissionsService } from "../services/submissions";
+import GradeSubmissionForm from "../components/assignments/GradeSubmissionForm";
 
 const dateFormatter = new Intl.DateTimeFormat("es-BO", {
   dateStyle: "medium",
@@ -69,7 +70,7 @@ function SubmissionsContent({ assignmentId, title }: SubmissionsContentProps) {
     [assignmentId],
   );
 
-  const { data, isLoading, error, reload } =
+  const { data, isLoading, error, reload, updateData } =
     useAuthenticatedQuery(loadSubmissions);
 
   return (
@@ -190,6 +191,32 @@ function SubmissionsContent({ assignmentId, title }: SubmissionsContentProps) {
                     </p>
                   )}
                 </div>
+                <details className="mt-5 border-t border-border pt-4">
+                  <summary className="cursor-pointer rounded font-semibold text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+                    {submission.grade === null
+                      ? "Calificar entrega"
+                      : "Actualizar calificación"}
+                  </summary>
+
+                  <GradeSubmissionForm
+                    submission={submission}
+                    onGraded={(gradedSubmission) => {
+                      updateData((current) => ({
+                        ...current,
+                        submissions: current.submissions.map((item) =>
+                          item.id === gradedSubmission.id
+                            ? {
+                                ...item,
+                                grade: gradedSubmission.grade,
+                                feedback: gradedSubmission.feedback,
+                                gradedAt: gradedSubmission.gradedAt,
+                              }
+                            : item,
+                        ),
+                      }));
+                    }}
+                  />
+                </details>
               </article>
             );
           })}

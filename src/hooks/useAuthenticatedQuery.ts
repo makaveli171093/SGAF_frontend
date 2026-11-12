@@ -65,6 +65,24 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
     setRequestVersion((current) => current + 1);
   }
 
+  function updateData(update: (current: T) => T) {
+    setResult((current) => {
+      if (
+        !current ||
+        current.loader !== load ||
+        current.version !== requestVersion ||
+        current.data === null
+      ) {
+        return current;
+      }
+
+      return {
+        ...current,
+        data: update(current.data),
+      };
+    });
+  }
+
   const isCurrentResult =
     result?.loader === load && result?.version === requestVersion;
 
@@ -73,5 +91,6 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
     error: isCurrentResult ? result.error : null,
     isLoading: Boolean(accessToken) && !isCurrentResult,
     reload,
+    updateData,
   };
 }
