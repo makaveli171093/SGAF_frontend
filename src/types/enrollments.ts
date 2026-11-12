@@ -46,3 +46,18 @@ export interface EnrollmentsResponse {
   message: string;
   enrollments: Enrollment[];
 }
+
+export interface CreateEnrollmentResponse {
+  message: string;
+
+  enrollment: {
+    id: string;
+  };
+
+  obligations: {
+    id: string;
+    description: string;
+    amount: string | number;
+    dueDate: string;
+  }[];
+}

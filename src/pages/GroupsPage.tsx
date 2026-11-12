@@ -1,5 +1,8 @@
 import { useGroups } from "../hooks/useGroups";
-import type { AcademicPeriodStatus } from "../types/groups";
+import type { AcademicPeriodStatus, AcademicGroup } from "../types/groups";
+import { Link } from "react-router";
+import { useCreateEnrollment } from "../hooks/useCreateEnrollment";
+import { useAuthStore } from "../stores/authStore";
 
 const periodLabels: Record<AcademicPeriodStatus, string> = {
   PLANNED: "Planificado",
@@ -9,6 +12,32 @@ const periodLabels: Record<AcademicPeriodStatus, string> = {
 
 export default function GroupsPage() {
   const { groups, isLoading, error, reload } = useGroups();
+  const user = useAuthStore((state) => state.user);
+
+  const {
+    enroll,
+    pendingGroupId,
+    error: enrollmentError,
+    success: enrollmentSuccess,
+  } = useCreateEnrollment();
+
+  const isEnrolling = pendingGroupId !== null;
+
+  async function handleEnroll(group: AcademicGroup) {
+    if (isEnrolling) return;
+
+    const confirmed = window.confirm(
+      `¿Confirmas tu inscripción en ${group.subject.name}, grupo ${group.name}, del período ${group.academicPeriod.name}?\n\nEsta acción genera obligaciones de pago por inscripción y mensualidad según las tarifas de la materia.`,
+    );
+
+    if (!confirmed) return;
+
+    const created = await enroll(group.id);
+
+    if (created) {
+      reload();
+    }
+  }
 
   return (
     <section aria-labelledby="groups-title">
@@ -30,12 +59,41 @@ export default function GroupsPage() {
         <button
           type="button"
           onClick={reload}
-          disabled={isLoading}
+          disabled={isLoading || isEnrolling}
           className="rounded-lg border border-brand px-4 py-2 text-sm font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
         >
           {isLoading ? "Cargando…" : "Actualizar"}
         </button>
       </div>
+
+      {user?.role === "STUDENT" && (
+        <div className="mb-6">
+          <Link
+            to="/mis-inscripciones"
+            className="font-medium text-brand underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          >
+            Ver mis inscripciones
+          </Link>
+        </div>
+      )}
+
+      {enrollmentSuccess && (
+        <p
+          role="status"
+          className="mb-6 rounded-xl bg-success-soft p-5 text-success"
+        >
+          {enrollmentSuccess}
+        </p>
+      )}
+
+      {enrollmentError && (
+        <p
+          role="alert"
+          className="mb-6 rounded-xl bg-danger-soft p-5 text-danger"
+        >
+          {enrollmentError}
+        </p>
+      )}
 
       {isLoading && (
         <p
@@ -82,6 +140,15 @@ export default function GroupsPage() {
                 0,
                 group.maxCapacity - group._count.enrollments,
               );
+
+              const enrollmentDisabledReason =
+                user?.status !== "ACTIVE"
+                  ? "Tu cuenta debe estar activa para inscribirte."
+                  : group.academicPeriod.status !== "ACTIVE"
+                    ? "El período no está activo."
+                    : availableSeats === 0
+                      ? "El grupo no tiene cupos disponibles."
+                      : null;
 
               return (
                 <article
@@ -150,6 +217,36 @@ export default function GroupsPage() {
                         : "Sin cupos"}
                     </span>
                   </div>
+                  {user?.role === "STUDENT" && (
+                    <div className="mt-5">
+                      <button
+                        type="button"
+                        onClick={() => void handleEnroll(group)}
+                        disabled={
+                          isEnrolling || enrollmentDisabledReason !== null
+                        }
+                        aria-describedby={
+                          enrollmentDisabledReason
+                            ? `enrollment-reason-${group.id}`
+                            : undefined
+                        }
+                        className="w-full rounded-lg bg-brand px-4 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
+                      >
+                        {pendingGroupId === group.id
+                          ? "Inscribiendo…"
+                          : "Inscribirme"}
+                      </button>
+
+                      {enrollmentDisabledReason && (
+                        <p
+                          id={`enrollment-reason-${group.id}`}
+                          className="mt-2 text-sm text-ink/70"
+                        >
+                          {enrollmentDisabledReason}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </article>
               );
             })}

@@ -1,5 +1,8 @@
 import { api } from "../lib/axios";
-import type { EnrollmentsResponse } from "../types/enrollments";
+import type {
+  EnrollmentsResponse,
+  CreateEnrollmentResponse,
+} from "../types/enrollments";
 
 export const enrollmentsService = {
   async getMine(
@@ -13,6 +16,23 @@ export const enrollmentsService = {
           Authorization: `Bearer ${accessToken}`,
         },
         signal,
+      },
+    );
+
+    return response.data;
+  },
+
+  async create(
+    accessToken: string,
+    groupId: string,
+  ): Promise<CreateEnrollmentResponse> {
+    const response = await api.post<CreateEnrollmentResponse>(
+      "/enrollments",
+      { groupId },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
     );
 
