@@ -1,6 +1,22 @@
 import { api } from "../lib/axios";
 import type { MyAssignmentsResponse } from "../types/assignments";
 
+interface CreateAssignmentInput {
+  groupId: string;
+  title: string;
+  instructions: string;
+  dueDate: string;
+}
+
+interface CreateAssignmentResponse {
+  message: string;
+  assignment: {
+    id: string;
+    tittle: string;
+    dueDate: string;
+  };
+}
+
 export const assignmentsService = {
   async getMine(
     accessToken: string,
@@ -13,6 +29,22 @@ export const assignmentsService = {
           Authorization: `Bearer ${accessToken}`,
         },
         signal,
+      },
+    );
+
+    return response.data;
+  },
+  async create(
+    accessToken: string,
+    values: CreateAssignmentInput,
+  ): Promise<CreateAssignmentResponse> {
+    const response = await api.post<CreateAssignmentResponse>(
+      "/assignments",
+      values,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
     );
 

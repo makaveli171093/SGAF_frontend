@@ -1,6 +1,7 @@
 import { useTeacherGroups } from "../hooks/useTeacherGroups";
 import type { DayOfWeek } from "../types/enrollments";
 import type { AcademicPeriodStatus } from "../types/groups";
+import CreateAssignmentForm from "../components/assignments/CreateAssignmentForm";
 
 const periodLabels: Record<AcademicPeriodStatus, string> = {
   PLANNED: "Planificado",
@@ -29,7 +30,8 @@ function formatTime(value: string) {
 }
 
 export default function TeacherGroupsPage() {
-  const { groups, isLoading, error, reload } = useTeacherGroups();
+  const { groups, isLoading, error, reload, registerCreatedAssignment } =
+    useTeacherGroups();
 
   return (
     <section aria-labelledby="teacher-groups-title">
@@ -164,6 +166,23 @@ export default function TeacherGroupsPage() {
                   </ul>
                 )}
               </div>
+              {group.academicPeriod.status === "CLOSED" ? (
+                <p className="mt-5 rounded-lg bg-canvas p-4 text-sm text-ink/70">
+                  El período está cerrado. No se pueden publicar nuevas tareas.
+                </p>
+              ) : (
+                <details className="mt-5 border-t border-border pt-4">
+                  <summary className="cursor-pointer rounded font-semibold text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+                    Publicar una tarea
+                  </summary>
+
+                  <CreateAssignmentForm
+                    groupId={group.id}
+                    groupName={`${group.subject.name} — ${group.name}`}
+                    onCreated={() => registerCreatedAssignment(group.id)}
+                  />
+                </details>
+              )}
             </article>
           ))}
         </div>

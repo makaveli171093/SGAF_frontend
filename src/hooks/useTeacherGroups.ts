@@ -58,5 +58,21 @@ export function useTeacherGroups() {
     setRequestVersion((current) => current + 1);
   }
 
-  return { groups, isLoading, error, reload };
+  function registerCreatedAssignment(groupId: string) {
+    setGroups((current) =>
+      current.map((group) =>
+        group.id === groupId
+          ? {
+              ...group,
+              _count: {
+                ...group._count,
+                assignments: group._count.assignments + 1,
+              },
+            }
+          : group,
+      ),
+    );
+  }
+
+  return { groups, isLoading, error, reload, registerCreatedAssignment };
 }
