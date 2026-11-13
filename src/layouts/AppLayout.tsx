@@ -63,7 +63,7 @@ export default function AppLayout() {
         Saltar al contenido
       </a>
 
-      <aside className="bg-brand text-white">
+      <aside className="bg-brand text-white lg:sticky lg:top-0 lg:h-dvh lg:self-start lg:overflow-y-auto">
         <div className="px-6 py-6 lg:px-8 lg:py-8">
           <p className="text-3xl font-bold tracking-wide">SGAF</p>
 
@@ -102,7 +102,7 @@ export default function AppLayout() {
       </aside>
 
       <div className="min-w-0">
-        <header className="border-b border-border bg-surface px-4 py-4 sm:px-8">
+        <header className="sticky top-0 z-20 border-b border-border bg-surface px-4 py-4 sm:px-8">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
             <div className="min-w-0">
               <p className="text-sm text-ink/70">{roleLabels[user.role]}</p>
