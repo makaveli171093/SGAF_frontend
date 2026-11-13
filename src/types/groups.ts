@@ -28,6 +28,12 @@ export interface AcademicGroup {
   _count: {
     enrollments: number;
   };
+
+  scheduleBlocks: {
+    dayOfWeek: DayOfWeek;
+    startTime: string;
+    endTime: string;
+  }[];
 }
 
 export interface GroupsResponse {
