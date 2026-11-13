@@ -8,6 +8,7 @@ import {
   obligationStyles,
 } from "../lib/finance";
 import { paymentsService } from "../services/payments";
+import ManualPaymentForm from "../components/payments/ManualPaymentForm";
 
 function normalizeSearch(value: string): string {
   return value
@@ -139,16 +140,16 @@ export default function PendingObligationsPage() {
                   >
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div className="min-w-0">
-                        <h2 className="break-words text-xl font-semibold text-brand">
+                        <h2 className="wrap-break-word text-xl font-semibold text-brand">
                           {obligation.student.user.firstName}{" "}
                           {obligation.student.user.lastName}
                         </h2>
 
-                        <p className="mt-1 break-words text-sm text-ink/70">
+                        <p className="mt-1 wrap-break-word text-sm text-ink/70">
                           Matrícula: {obligation.student.enrollmentCode}
                         </p>
 
-                        <p className="mt-1 break-words text-sm text-ink/70">
+                        <p className="mt-1 wrap-break-word text-sm text-ink/70">
                           {obligation.student.user.email}
                         </p>
                       </div>
@@ -160,7 +161,7 @@ export default function PendingObligationsPage() {
                       </span>
                     </div>
 
-                    <p className="mt-5 break-words font-medium">
+                    <p className="mt-5 wrap-break-word font-medium">
                       {obligation.description}
                     </p>
 
@@ -181,6 +182,13 @@ export default function PendingObligationsPage() {
                         </dd>
                       </div>
                     </dl>
+                    <details className="mt-5 border-t border-border pt-4">
+                      <summary className="cursor-pointer rounded font-semibold text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+                        Registrar pago manual
+                      </summary>
+
+                      <ManualPaymentForm obligation={obligation} />
+                    </details>
                   </article>
                 );
               })}

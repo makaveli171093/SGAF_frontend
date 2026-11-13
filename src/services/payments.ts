@@ -3,6 +3,8 @@ import type {
   FinancialHistoryResponse,
   OnlinePaymentResponse,
   PendingObligationsResponse,
+  CreateManualPaymentInput,
+  CreateManualPaymentResponse,
 } from "../types/payments";
 
 export const paymentsService = {
@@ -58,5 +60,21 @@ export const paymentsService = {
       ...response.data,
       checkedAt: Date.now(),
     };
+  },
+  async createManualPayment(
+    accessToken: string,
+    values: CreateManualPaymentInput,
+  ): Promise<CreateManualPaymentResponse> {
+    const response = await api.post<CreateManualPaymentResponse>(
+      "/payments/manual",
+      values,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response.data;
   },
 };

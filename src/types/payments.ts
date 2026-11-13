@@ -68,3 +68,14 @@ export interface PendingObligationsResponse {
   message: string;
   obligations: PendingObligation[];
 }
+
+export interface CreateManualPaymentInput {
+  obligationId: string;
+  method: "CASH" | "BANK_TRANSFER";
+  receiptNumber?: string;
+}
+
+export interface CreateManualPaymentResponse {
+  message: string;
+  payment: Payment;
+}
