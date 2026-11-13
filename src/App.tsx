@@ -13,6 +13,7 @@ import MyAssignmentsPage from "./pages/MyAssignmentsPage";
 import TeacherGroupsPage from "./pages/TeacherGroupsPage";
 import TeacherAssignmentsPage from "./pages/TeacherAssignmentsPage";
 import TeacherSubmissionsPage from "./pages/TeacherSubmissionsPage";
+import PendingObligationsPage from "./pages/PendingObligationsPage";
 
 export default function App() {
   return (
@@ -44,6 +45,12 @@ export default function App() {
             <Route
               path="/docente/tareas/:assignmentId/entregas"
               element={<TeacherSubmissionsPage />}
+            />
+          </Route>
+          <Route element={<RoleRoute allowedRoles={["RECEPCIONIST"]} />}>
+            <Route
+              path="/recepcion/obligaciones"
+              element={<PendingObligationsPage />}
             />
           </Route>
         </Route>

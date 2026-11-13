@@ -51,7 +51,7 @@ export function formatFinancialDate(value: string | number): string {
 }
 
 export function getObligationStatus(
-  obligation: FinancialObligation,
+  obligation: Pick<FinancialObligation, "status" | "dueDate">,
   checkedAt: number,
 ): ObligationStatus {
   if (obligation.status === "PAID" || obligation.status === "CACELLED") {

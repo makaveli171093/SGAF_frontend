@@ -37,6 +37,11 @@ const navigationItems: NavigationItem[] = [
     label: "Tareas publicadas",
     roles: ["TEACHER"],
   },
+  {
+    to: "/recepcion/obligaciones",
+    label: "Obligaciones pendientes",
+    roles: ["RECEPCIONIST"],
+  },
 ];
 
 export default function AppLayout() {
