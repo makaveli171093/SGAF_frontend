@@ -102,16 +102,16 @@ export default function TeacherGroupsPage() {
             >
               <p className="text-sm text-ink/70">{group.subject.code}</p>
 
-              <h2 className="mt-1 break-words text-xl font-semibold text-brand">
+              <h2 className="mt-1 wrap-break-words text-xl font-semibold text-brand">
                 {group.subject.name}
               </h2>
 
-              <p className="mt-2 break-words">Grupo: {group.name}</p>
+              <p className="mt-2 bwrap-reak-words">Grupo: {group.name}</p>
 
               <dl className="mt-5 grid gap-4 sm:grid-cols-2">
                 <div>
                   <dt className="text-sm text-ink/70">Período</dt>
-                  <dd className="mt-1 break-words font-medium">
+                  <dd className="mt-1 wrap-break-words font-medium">
                     {group.academicPeriod.name}
                   </dd>
                 </div>

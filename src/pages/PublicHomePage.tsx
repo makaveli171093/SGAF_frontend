@@ -145,7 +145,7 @@ export default function PublicHomePage() {
               width={1536}
               height={1024}
               fetchPriority="high"
-              className="w-full rounded-[2rem] border border-border object-cover shadow-xl shadow-brand/10"
+              className="w-full rounded-4xl border border-border object-cover shadow-xl shadow-brand/10"
             />
 
             <div className="relative mx-5 -mt-6 rounded-2xl border border-border bg-surface p-5 shadow-sm">
@@ -214,7 +214,7 @@ export default function PublicHomePage() {
           aria-labelledby="about-title"
           className="mx-auto grid max-w-7xl scroll-mt-6 gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]"
         >
-          <div className="rounded-[2rem] bg-brand p-8 text-white sm:p-10">
+          <div className="rounded-4xl bg-brand p-8 text-white sm:p-10">
             <p className="text-sm font-semibold tracking-widest text-white/70">
               SOMOS NEXORA
             </p>
@@ -318,7 +318,7 @@ export default function PublicHomePage() {
 
                 <div>
                   <dt className="text-sm text-ink/70">Correo electrónico</dt>
-                  <dd className="mt-1 break-words font-semibold text-brand">
+                  <dd className="mt-1 wrap-break-word font-semibold text-brand">
                     <a
                       href="mailto:nexora@edu.bo"
                       className="underline-offset-4 hover:underline"

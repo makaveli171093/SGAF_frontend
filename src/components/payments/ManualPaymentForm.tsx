@@ -125,7 +125,7 @@ export default function ManualPaymentForm({
         </p>
 
         {registeredPayment.receiptNumber && (
-          <p className="mt-1 break-words">
+          <p className="mt-1 wrap-break-word">
             Comprobante: {registeredPayment.receiptNumber}
           </p>
         )}

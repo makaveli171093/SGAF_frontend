@@ -213,14 +213,14 @@ export default function RegisterPage() {
             <dl className="mt-6 grid gap-5 sm:grid-cols-2">
               <div>
                 <dt className="text-sm text-ink/70">Código de matrícula</dt>
-                <dd className="mt-1 break-words text-xl font-bold text-brand">
+                <dd className="mt-1 wrap-break-word text-xl font-bold text-brand">
                   {result.student.enrollmentCode}
                 </dd>
               </div>
 
               <div>
                 <dt className="text-sm text-ink/70">Correo registrado</dt>
-                <dd className="mt-1 break-words font-medium">
+                <dd className="mt-1 wrap-break-word font-medium">
                   {result.student.email}
                 </dd>
               </div>

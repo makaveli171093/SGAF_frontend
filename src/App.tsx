@@ -78,9 +78,9 @@ export default function App() {
                 element={<PendingApplicantsPage />}
               />
             </Route>
-          </Route>
-          <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
-            <Route path="/admin/usuarios" element={<AdminUsersPage />} />
+            <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
+              <Route path="/admin/usuarios" element={<AdminUsersPage />} />
+            </Route>
           </Route>
         </Route>
       </Route>
