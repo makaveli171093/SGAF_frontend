@@ -21,6 +21,7 @@ import PublicHomePage from "./pages/PublicHomePage";
 import RegisterPage from "./pages/RegisterPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import CreateStaffPage from "./pages/CreateStaffPage";
+import AcademicPeriodsPage from "./pages/AcademicPeriodsPage";
 
 export default function App() {
   return (
@@ -85,6 +86,7 @@ export default function App() {
                 path="/admin/usuarios/nuevo"
                 element={<CreateStaffPage />}
               />
+              <Route path="/admin/periodos" element={<AcademicPeriodsPage />} />
             </Route>
           </Route>
         </Route>

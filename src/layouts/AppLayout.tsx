@@ -57,6 +57,11 @@ const navigationItems: NavigationItem[] = [
     label: "Usuarios",
     roles: ["ADMIN"],
   },
+  {
+    to: "/admin/periodos",
+    label: "Períodos académicos",
+    roles: ["ADMIN"],
+  },
 ];
 
 export default function AppLayout() {
