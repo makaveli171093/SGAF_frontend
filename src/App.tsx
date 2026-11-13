@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router";
+import { Outlet, Route, Routes } from "react-router";
 import AppLayout from "./layouts/AppLayout";
 import LoginPage from "./pages/LoginPage";
 import AccountPage from "./pages/AccountPage";
@@ -16,56 +16,68 @@ import TeacherSubmissionsPage from "./pages/TeacherSubmissionsPage";
 import PendingObligationsPage from "./pages/PendingObligationsPage";
 import PendingManualPaymentsPage from "./pages/PendingManualPaymentsPage";
 import PendingApplicantsPage from "./pages/PendingApplicantsPage";
+import SessionGate from "./components/auth/SessionGate";
+import PublicHomePage from "./pages/PublicHomePage";
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/cuenta" replace />} />
+      <Route path="/" element={<PublicHomePage />} />
 
-      <Route element={<GuestRoute />}>
-        <Route path="/login" element={<LoginPage />} />
-      </Route>
+      <Route
+        element={
+          <SessionGate>
+            <Outlet />
+          </SessionGate>
+        }
+      >
+        <Route element={<GuestRoute />}>
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
 
-      <Route element={<ProtectedRoute />}>
-        <Route element={<AppLayout />}>
-          <Route path="/cuenta" element={<AccountPage />} />
-          <Route path="/grupos" element={<GroupsPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
+            <Route path="/cuenta" element={<AccountPage />} />
+            <Route path="/grupos" element={<GroupsPage />} />
 
-          <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
-            <Route path="/mis-inscripciones" element={<MyEnrollmentsPage />} />
-            <Route path="/mis-finanzas" element={<MyFinancesPage />} />
-            <Route path="/mis-tareas" element={<MyAssignmentsPage />} />
-          </Route>
+            <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
+              <Route
+                path="/mis-inscripciones"
+                element={<MyEnrollmentsPage />}
+              />
+              <Route path="/mis-finanzas" element={<MyFinancesPage />} />
+              <Route path="/mis-tareas" element={<MyAssignmentsPage />} />
+            </Route>
 
-          <Route element={<RoleRoute allowedRoles={["TEACHER"]} />}>
-            <Route path="/docente/grupos" element={<TeacherGroupsPage />} />
-            <Route
-              path="/docente/tareas"
-              element={<TeacherAssignmentsPage />}
-            />
+            <Route element={<RoleRoute allowedRoles={["TEACHER"]} />}>
+              <Route path="/docente/grupos" element={<TeacherGroupsPage />} />
+              <Route
+                path="/docente/tareas"
+                element={<TeacherAssignmentsPage />}
+              />
 
-            <Route
-              path="/docente/tareas/:assignmentId/entregas"
-              element={<TeacherSubmissionsPage />}
-            />
-          </Route>
-          <Route element={<RoleRoute allowedRoles={["RECEPCIONIST"]} />}>
-            <Route
-              path="/recepcion/obligaciones"
-              element={<PendingObligationsPage />}
-            />
-            <Route
-              path="/recepcion/pagos"
-              element={<PendingManualPaymentsPage />}
-            />
-            <Route
-              path="/recepcion/postulantes"
-              element={<PendingApplicantsPage />}
-            />
+              <Route
+                path="/docente/tareas/:assignmentId/entregas"
+                element={<TeacherSubmissionsPage />}
+              />
+            </Route>
+            <Route element={<RoleRoute allowedRoles={["RECEPCIONIST"]} />}>
+              <Route
+                path="/recepcion/obligaciones"
+                element={<PendingObligationsPage />}
+              />
+              <Route
+                path="/recepcion/pagos"
+                element={<PendingManualPaymentsPage />}
+              />
+              <Route
+                path="/recepcion/postulantes"
+                element={<PendingApplicantsPage />}
+              />
+            </Route>
           </Route>
         </Route>
       </Route>
-
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
