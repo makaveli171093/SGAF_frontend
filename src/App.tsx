@@ -18,6 +18,7 @@ import PendingManualPaymentsPage from "./pages/PendingManualPaymentsPage";
 import PendingApplicantsPage from "./pages/PendingApplicantsPage";
 import SessionGate from "./components/auth/SessionGate";
 import PublicHomePage from "./pages/PublicHomePage";
+import RegisterPage from "./pages/RegisterPage";
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
       >
         <Route element={<GuestRoute />}>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/registro" element={<RegisterPage />} />
         </Route>
 
         <Route element={<ProtectedRoute />}>

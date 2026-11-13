@@ -93,6 +93,12 @@ export default function PublicHomePage() {
             >
               Aula virtual
             </Link>
+            <Link
+              to="/registro"
+              className="rounded-lg bg-brand px-4 py-2 font-semibold text-white hover:bg-brand-hover"
+            >
+              Postularme
+            </Link>
           </nav>
         </div>
       </header>
@@ -115,14 +121,9 @@ export default function PublicHomePage() {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={primaryButton}
-              >
-                Solicitar información
-              </a>
+              <Link to="/registro" className={primaryButton}>
+                Postularme
+              </Link>
 
               <a
                 href="#formacion"
