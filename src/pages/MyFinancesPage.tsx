@@ -9,6 +9,10 @@ import {
   paymentStatusLabels,
 } from "../lib/finance";
 import { useAuthStore } from "../stores/authStore";
+import OnlinePaymentAction from "../components/payments/OnlinePaymentAction";
+
+const onlinePaymentsEnabled =
+  import.meta.env.VITE_ONLINE_PAYMENTS_ENABLED === "true";
 
 export default function MyFinancesPage() {
   const user = useAuthStore((state) => state.user);
@@ -108,7 +112,7 @@ export default function MyFinancesPage() {
                     className="rounded-2xl border border-border bg-surface p-6"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-4">
-                      <h2 className="min-w-0 break-words text-lg font-semibold text-brand">
+                      <h2 className="min-w-0 wrap-break-word text-lg font-semibold text-brand">
                         {obligation.description}
                       </h2>
 
@@ -136,7 +140,12 @@ export default function MyFinancesPage() {
                         </dd>
                       </div>
                     </dl>
-
+                    {onlinePaymentsEnabled && (
+                      <OnlinePaymentAction
+                        obligation={obligation}
+                        onCreated={reload}
+                      />
+                    )}
                     <details className="mt-6 border-t border-border pt-4">
                       <summary className="cursor-pointer rounded font-medium text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
                         Pagos registrados ({obligation.payments.length})
@@ -192,6 +201,13 @@ export default function MyFinancesPage() {
             Un pago pendiente de confirmación no significa que la obligación
             esté pagada. Pulsa Actualizar para consultar los últimos cambios.
           </p>
+
+          {!onlinePaymentsEnabled && (
+            <p className="mt-2 text-sm text-ink/70">
+              El pago en línea no está disponible por el momento. Puedes
+              consultar tus obligaciones e historial.
+            </p>
+          )}
         </>
       )}
     </section>
