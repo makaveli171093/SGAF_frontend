@@ -79,3 +79,20 @@ export interface CreateManualPaymentResponse {
   message: string;
   payment: Payment;
 }
+
+export type ManualPaymentDecision = "APPROVED" | "REJECTED";
+
+export interface PendingManualPayment extends Payment {
+  method: "CASH" | "BANK_TRANSFER";
+  obligation: PendingObligation;
+}
+
+export interface PendingManualPaymentsResponse {
+  message: string;
+  payments: PendingManualPayment[];
+}
+
+export interface VerifyManualPaymentResponse {
+  message: string;
+  payment: Payment;
+}

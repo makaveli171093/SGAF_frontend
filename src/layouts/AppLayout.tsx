@@ -42,6 +42,11 @@ const navigationItems: NavigationItem[] = [
     label: "Obligaciones pendientes",
     roles: ["RECEPCIONIST"],
   },
+  {
+    to: "/recepcion/pagos",
+    label: "Pagos por verificar",
+    roles: ["RECEPCIONIST"],
+  },
 ];
 
 export default function AppLayout() {

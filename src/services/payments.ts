@@ -5,6 +5,9 @@ import type {
   PendingObligationsResponse,
   CreateManualPaymentInput,
   CreateManualPaymentResponse,
+  ManualPaymentDecision,
+  PendingManualPaymentsResponse,
+  VerifyManualPaymentResponse,
 } from "../types/payments";
 
 export const paymentsService = {
@@ -68,6 +71,41 @@ export const paymentsService = {
     const response = await api.post<CreateManualPaymentResponse>(
       "/payments/manual",
       values,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response.data;
+  },
+
+  async getPendingManualPayments(
+    accessToken: string,
+    signal: AbortSignal,
+  ): Promise<PendingManualPaymentsResponse> {
+    const response = await api.get<PendingManualPaymentsResponse>(
+      "/payments/manual/pending",
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        signal,
+      },
+    );
+
+    return response.data;
+  },
+
+  async verifyManualPayment(
+    accessToken: string,
+    paymentId: string,
+    status: ManualPaymentDecision,
+  ): Promise<VerifyManualPaymentResponse> {
+    const response = await api.patch<VerifyManualPaymentResponse>(
+      `/payments/${encodeURIComponent(paymentId)}/verify`,
+      { status },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

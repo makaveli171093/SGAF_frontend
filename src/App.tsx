@@ -14,6 +14,7 @@ import TeacherGroupsPage from "./pages/TeacherGroupsPage";
 import TeacherAssignmentsPage from "./pages/TeacherAssignmentsPage";
 import TeacherSubmissionsPage from "./pages/TeacherSubmissionsPage";
 import PendingObligationsPage from "./pages/PendingObligationsPage";
+import PendingManualPaymentsPage from "./pages/PendingManualPaymentsPage";
 
 export default function App() {
   return (
@@ -51,6 +52,10 @@ export default function App() {
             <Route
               path="/recepcion/obligaciones"
               element={<PendingObligationsPage />}
+            />
+            <Route
+              path="/recepcion/pagos"
+              element={<PendingManualPaymentsPage />}
             />
           </Route>
         </Route>
