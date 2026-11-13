@@ -52,6 +52,11 @@ const navigationItems: NavigationItem[] = [
     label: "Postulantes pendientes",
     roles: ["RECEPCIONIST"],
   },
+  {
+    to: "/admin/usuarios",
+    label: "Usuarios",
+    roles: ["ADMIN"],
+  },
 ];
 
 export default function AppLayout() {

@@ -19,6 +19,7 @@ import PendingApplicantsPage from "./pages/PendingApplicantsPage";
 import SessionGate from "./components/auth/SessionGate";
 import PublicHomePage from "./pages/PublicHomePage";
 import RegisterPage from "./pages/RegisterPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
 
 export default function App() {
   return (
@@ -77,6 +78,9 @@ export default function App() {
                 element={<PendingApplicantsPage />}
               />
             </Route>
+          </Route>
+          <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
+            <Route path="/admin/usuarios" element={<AdminUsersPage />} />
           </Route>
         </Route>
       </Route>
