@@ -2,6 +2,8 @@ import { NavLink, Outlet } from "react-router";
 import { roleLabels } from "../constants/authLabels";
 import { useAuthStore } from "../stores/authStore";
 import type { UserRole } from "../types/auth";
+import { Suspense } from "react";
+import PageLoading from "../components/PageLoading";
 
 interface NavigationItem {
   to: string;
@@ -65,6 +67,11 @@ const navigationItems: NavigationItem[] = [
   {
     to: "/admin/materias",
     label: "Materias",
+    roles: ["ADMIN"],
+  },
+  {
+    to: "/admin/grupos",
+    label: "Grupos y horarios",
     roles: ["ADMIN"],
   },
 ];
@@ -152,7 +159,9 @@ export default function AppLayout() {
           tabIndex={-1}
           className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8"
         >
-          <Outlet />
+          <Suspense fallback={<PageLoading />}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

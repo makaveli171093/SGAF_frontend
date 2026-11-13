@@ -1,99 +1,123 @@
 import { Outlet, Route, Routes } from "react-router";
 import AppLayout from "./layouts/AppLayout";
-import LoginPage from "./pages/LoginPage";
-import AccountPage from "./pages/AccountPage";
-import NotFoundPage from "./pages/NotFoundPage";
 import GuestRoute from "./routes/GuestRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
-import GroupsPage from "./pages/GroupsPage";
-import MyEnrollmentsPage from "./pages/MyEnrollmentsPage";
 import RoleRoute from "./routes/RoleRoute";
-import MyFinancesPage from "./pages/MyFinancesPage";
-import MyAssignmentsPage from "./pages/MyAssignmentsPage";
-import TeacherGroupsPage from "./pages/TeacherGroupsPage";
-import TeacherAssignmentsPage from "./pages/TeacherAssignmentsPage";
-import TeacherSubmissionsPage from "./pages/TeacherSubmissionsPage";
-import PendingObligationsPage from "./pages/PendingObligationsPage";
-import PendingManualPaymentsPage from "./pages/PendingManualPaymentsPage";
-import PendingApplicantsPage from "./pages/PendingApplicantsPage";
 import SessionGate from "./components/auth/SessionGate";
 import PublicHomePage from "./pages/PublicHomePage";
-import RegisterPage from "./pages/RegisterPage";
-import AdminUsersPage from "./pages/AdminUsersPage";
-import CreateStaffPage from "./pages/CreateStaffPage";
-import AcademicPeriodsPage from "./pages/AcademicPeriodsPage";
-import SubjectsPage from "./pages/SubjectsPage";
+import { lazy, Suspense } from "react";
+import PageLoading from "./components/PageLoading";
+
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const RegisterPage = lazy(() => import("./pages/RegisterPage"));
+const AccountPage = lazy(() => import("./pages/AccountPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+
+const GroupsPage = lazy(() => import("./pages/GroupsPage"));
+const MyEnrollmentsPage = lazy(() => import("./pages/MyEnrollmentsPage"));
+const MyFinancesPage = lazy(() => import("./pages/MyFinancesPage"));
+const MyAssignmentsPage = lazy(() => import("./pages/MyAssignmentsPage"));
+
+const TeacherGroupsPage = lazy(() => import("./pages/TeacherGroupsPage"));
+const TeacherAssignmentsPage = lazy(
+  () => import("./pages/TeacherAssignmentsPage"),
+);
+const TeacherSubmissionsPage = lazy(
+  () => import("./pages/TeacherSubmissionsPage"),
+);
+
+const PendingObligationsPage = lazy(
+  () => import("./pages/PendingObligationsPage"),
+);
+const PendingManualPaymentsPage = lazy(
+  () => import("./pages/PendingManualPaymentsPage"),
+);
+const PendingApplicantsPage = lazy(
+  () => import("./pages/PendingApplicantsPage"),
+);
+
+const AdminUsersPage = lazy(() => import("./pages/AdminUsersPage"));
+const CreateStaffPage = lazy(() => import("./pages/CreateStaffPage"));
+const AcademicPeriodsPage = lazy(() => import("./pages/AcademicPeriodsPage"));
+const SubjectsPage = lazy(() => import("./pages/SubjectsPage"));
+const AdminGroupsPage = lazy(() => import("./pages/AdminGroupsPage"));
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<PublicHomePage />} />
+    <Suspense fallback={<PageLoading />}>
+      <Routes>
+        <Route path="/" element={<PublicHomePage />} />
 
-      <Route
-        element={
-          <SessionGate>
-            <Outlet />
-          </SessionGate>
-        }
-      >
-        <Route element={<GuestRoute />}>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/registro" element={<RegisterPage />} />
-        </Route>
+        <Route
+          element={
+            <SessionGate>
+              <Outlet />
+            </SessionGate>
+          }
+        >
+          <Route element={<GuestRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/registro" element={<RegisterPage />} />
+          </Route>
 
-        <Route element={<ProtectedRoute />}>
-          <Route element={<AppLayout />}>
-            <Route path="/cuenta" element={<AccountPage />} />
-            <Route path="/grupos" element={<GroupsPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppLayout />}>
+              <Route path="/cuenta" element={<AccountPage />} />
+              <Route path="/grupos" element={<GroupsPage />} />
 
-            <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
-              <Route
-                path="/mis-inscripciones"
-                element={<MyEnrollmentsPage />}
-              />
-              <Route path="/mis-finanzas" element={<MyFinancesPage />} />
-              <Route path="/mis-tareas" element={<MyAssignmentsPage />} />
-            </Route>
+              <Route element={<RoleRoute allowedRoles={["STUDENT"]} />}>
+                <Route
+                  path="/mis-inscripciones"
+                  element={<MyEnrollmentsPage />}
+                />
+                <Route path="/mis-finanzas" element={<MyFinancesPage />} />
+                <Route path="/mis-tareas" element={<MyAssignmentsPage />} />
+              </Route>
 
-            <Route element={<RoleRoute allowedRoles={["TEACHER"]} />}>
-              <Route path="/docente/grupos" element={<TeacherGroupsPage />} />
-              <Route
-                path="/docente/tareas"
-                element={<TeacherAssignmentsPage />}
-              />
+              <Route element={<RoleRoute allowedRoles={["TEACHER"]} />}>
+                <Route path="/docente/grupos" element={<TeacherGroupsPage />} />
+                <Route
+                  path="/docente/tareas"
+                  element={<TeacherAssignmentsPage />}
+                />
 
-              <Route
-                path="/docente/tareas/:assignmentId/entregas"
-                element={<TeacherSubmissionsPage />}
-              />
-            </Route>
-            <Route element={<RoleRoute allowedRoles={["RECEPCIONIST"]} />}>
-              <Route
-                path="/recepcion/obligaciones"
-                element={<PendingObligationsPage />}
-              />
-              <Route
-                path="/recepcion/pagos"
-                element={<PendingManualPaymentsPage />}
-              />
-              <Route
-                path="/recepcion/postulantes"
-                element={<PendingApplicantsPage />}
-              />
-            </Route>
-            <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
-              <Route path="/admin/usuarios" element={<AdminUsersPage />} />
-              <Route
-                path="/admin/usuarios/nuevo"
-                element={<CreateStaffPage />}
-              />
-              <Route path="/admin/periodos" element={<AcademicPeriodsPage />} />
-              <Route path="/admin/materias" element={<SubjectsPage />} />
+                <Route
+                  path="/docente/tareas/:assignmentId/entregas"
+                  element={<TeacherSubmissionsPage />}
+                />
+              </Route>
+              <Route element={<RoleRoute allowedRoles={["RECEPCIONIST"]} />}>
+                <Route
+                  path="/recepcion/obligaciones"
+                  element={<PendingObligationsPage />}
+                />
+                <Route
+                  path="/recepcion/pagos"
+                  element={<PendingManualPaymentsPage />}
+                />
+                <Route
+                  path="/recepcion/postulantes"
+                  element={<PendingApplicantsPage />}
+                />
+              </Route>
+              <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
+                <Route path="/admin/usuarios" element={<AdminUsersPage />} />
+                <Route
+                  path="/admin/usuarios/nuevo"
+                  element={<CreateStaffPage />}
+                />
+                <Route
+                  path="/admin/periodos"
+                  element={<AcademicPeriodsPage />}
+                />
+                <Route path="/admin/materias" element={<SubjectsPage />} />
+                <Route path="/admin/grupos" element={<AdminGroupsPage />} />
+              </Route>
             </Route>
           </Route>
         </Route>
-      </Route>
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Suspense>
   );
 }
