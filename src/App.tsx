@@ -20,6 +20,7 @@ import SessionGate from "./components/auth/SessionGate";
 import PublicHomePage from "./pages/PublicHomePage";
 import RegisterPage from "./pages/RegisterPage";
 import AdminUsersPage from "./pages/AdminUsersPage";
+import CreateStaffPage from "./pages/CreateStaffPage";
 
 export default function App() {
   return (
@@ -80,6 +81,10 @@ export default function App() {
             </Route>
             <Route element={<RoleRoute allowedRoles={["ADMIN"]} />}>
               <Route path="/admin/usuarios" element={<AdminUsersPage />} />
+              <Route
+                path="/admin/usuarios/nuevo"
+                element={<CreateStaffPage />}
+              />
             </Route>
           </Route>
         </Route>

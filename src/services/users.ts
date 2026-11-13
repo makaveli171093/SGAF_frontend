@@ -1,5 +1,9 @@
 import { api } from "../lib/axios";
-import type { UsersResponse } from "../types/users";
+import type {
+  UsersResponse,
+  CreateStaffInput,
+  CreateStaffResponse,
+} from "../types/users";
 
 export const usersService = {
   async getAll(
@@ -12,6 +16,23 @@ export const usersService = {
       },
       signal,
     });
+
+    return response.data;
+  },
+
+  async createStaff(
+    accessToken: string,
+    values: CreateStaffInput,
+  ): Promise<CreateStaffResponse> {
+    const response = await api.post<CreateStaffResponse>(
+      "/users/staff",
+      values,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
 
     return response.data;
   },

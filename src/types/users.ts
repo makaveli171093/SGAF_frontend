@@ -19,3 +19,28 @@ export interface UsersResponse {
   message: string;
   users: SystemUser[];
 }
+
+export type StaffRole = "ADMIN" | "RECEPCIONIST" | "TEACHER";
+
+export interface CreateStaffInput {
+  firstName: string;
+  lastName: string;
+  ci: string;
+  phone?: string;
+  email: string;
+  password: string;
+  role: StaffRole;
+  specialty?: string;
+  hireDate?: string;
+}
+
+export interface CreateStaffResponse {
+  message: string;
+  user: User & {
+    teacherProfile: {
+      id: string;
+      specialty: string;
+      hireDate: string;
+    } | null;
+  };
+}

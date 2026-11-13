@@ -2,6 +2,7 @@ import { useState } from "react";
 import { roleLabels, statusLabels } from "../constants/authLabels";
 import { useAuthenticatedQuery } from "../hooks/useAuthenticatedQuery";
 import { usersService } from "../services/users";
+import { Link } from "react-router";
 
 function normalizeSearch(value: string): string {
   return value
@@ -73,6 +74,13 @@ export default function AdminUsersPage() {
         >
           {isLoading ? "Cargando…" : "Actualizar"}
         </button>
+
+        <Link
+          to="/admin/usuarios/nuevo"
+          className="rounded-lg bg-brand px-4 py-2 font-semibold text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+        >
+          Crear usuario interno
+        </Link>
       </div>
 
       <div className="mb-6 rounded-2xl border border-border bg-surface p-5">
