@@ -39,4 +39,22 @@ export const academicPeriodsService = {
 
     return response.data;
   },
+
+  async updateStatus(
+    accessToken: string,
+    periodId: string,
+    status: "ACTIVE" | "CLOSED",
+  ): Promise<CreateAcademicPeriodResponse> {
+    const response = await api.patch<CreateAcademicPeriodResponse>(
+      `/academic-periods/${encodeURIComponent(periodId)}/status`,
+      { status },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    return response.data;
+  },
 };

@@ -2,6 +2,7 @@ import CreateAcademicPeriodForm from "../components/academic/CreateAcademicPerio
 import { useAuthenticatedQuery } from "../hooks/useAuthenticatedQuery";
 import { academicPeriodsService } from "../services/academicPeriods";
 import type { AcademicPeriodStatus } from "../types/groups";
+import PeriodStatusActions from "../components/academic/PeriodStatusActions";
 
 const periodLabels: Record<AcademicPeriodStatus, string> = {
   PLANNED: "Planificado",
@@ -121,6 +122,7 @@ export default function AcademicPeriodsPage() {
                   <dd className="mt-1 font-medium">{period.maxCredits}</dd>
                 </div>
               </dl>
+              <PeriodStatusActions period={period} onUpdated={reload} />
             </article>
           ))}
         </div>
