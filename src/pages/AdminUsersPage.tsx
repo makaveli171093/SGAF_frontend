@@ -201,7 +201,7 @@ export default function AdminUsersPage() {
                   className="min-w-0 rounded-2xl border border-border bg-surface p-6"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
-                    <h2 className="min-w-0 break-words text-xl font-semibold text-brand">
+                    <h2 className="min-w-0 wrap-break-word text-xl font-semibold text-brand">
                       {user.firstName} {user.lastName}
                     </h2>
 
@@ -213,14 +213,14 @@ export default function AdminUsersPage() {
                   <dl className="mt-5 grid gap-4 sm:grid-cols-2">
                     <div className="min-w-0">
                       <dt className="text-sm text-ink/70">Correo</dt>
-                      <dd className="mt-1 break-words font-medium">
+                      <dd className="mt-1 wrap-break-word font-medium">
                         {user.email}
                       </dd>
                     </div>
 
                     <div>
                       <dt className="text-sm text-ink/70">Documento</dt>
-                      <dd className="mt-1 break-words font-medium">
+                      <dd className="mt-1 wrap-break-word font-medium">
                         {user.ci}
                       </dd>
                     </div>
@@ -242,7 +242,7 @@ export default function AdminUsersPage() {
                     {user.stundentProfile && (
                       <div>
                         <dt className="text-sm text-ink/70">Matrícula</dt>
-                        <dd className="mt-1 break-words font-medium">
+                        <dd className="mt-1 wrap-break-word font-medium">
                           {user.stundentProfile.enrollmentCode}
                         </dd>
                       </div>
@@ -251,7 +251,7 @@ export default function AdminUsersPage() {
                     {user.teacherProfile && (
                       <div>
                         <dt className="text-sm text-ink/70">Especialidad</dt>
-                        <dd className="mt-1 break-words font-medium">
+                        <dd className="mt-1 wrap-break-word font-medium">
                           {user.teacherProfile.specialty}
                         </dd>
                       </div>

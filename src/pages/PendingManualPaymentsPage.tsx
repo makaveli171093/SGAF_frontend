@@ -104,7 +104,7 @@ export default function PendingManualPaymentsPage() {
               key={payment.id}
               className="rounded-2xl border border-border bg-surface p-6"
             >
-              <h2 className="break-words text-xl font-semibold text-brand">
+              <h2 className="wrap-break-words text-xl font-semibold text-brand">
                 {payment.obligation.student.user.firstName}{" "}
                 {payment.obligation.student.user.lastName}
               </h2>
@@ -113,7 +113,7 @@ export default function PendingManualPaymentsPage() {
                 Matrícula: {payment.obligation.student.enrollmentCode}
               </p>
 
-              <p className="mt-4 break-words font-medium">
+              <p className="mt-4 wrap-break-word font-medium">
                 {payment.obligation.description}
               </p>
 
@@ -134,7 +134,7 @@ export default function PendingManualPaymentsPage() {
 
                 <div>
                   <dt className="text-sm text-ink/70">Comprobante</dt>
-                  <dd className="mt-1 break-words font-medium">
+                  <dd className="mt-1 wrap-break-word font-medium">
                     {payment.receiptNumber ?? "Sin comprobante"}
                   </dd>
                 </div>

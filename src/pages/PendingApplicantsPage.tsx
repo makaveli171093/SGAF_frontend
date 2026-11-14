@@ -182,21 +182,21 @@ export default function PendingApplicantsPage() {
                 key={applicant.id}
                 className="rounded-2xl border border-border bg-surface p-6"
               >
-                <h2 className="break-words text-xl font-semibold text-brand">
+                <h2 className="wrap-break-words text-xl font-semibold text-brand">
                   {applicant.firstName} {applicant.lastName}
                 </h2>
 
                 <dl className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div>
                     <dt className="text-sm text-ink/70">Matrícula</dt>
-                    <dd className="mt-1 break-words font-medium">
+                    <dd className="mt-1 wrap-break-word font-medium">
                       {profile?.enrollmentCode ?? "Sin perfil estudiantil"}
                     </dd>
                   </div>
 
                   <div>
                     <dt className="text-sm text-ink/70">Correo</dt>
-                    <dd className="mt-1 break-words font-medium">
+                    <dd className="mt-1 wrap-break-word font-medium">
                       {applicant.email}
                     </dd>
                   </div>
