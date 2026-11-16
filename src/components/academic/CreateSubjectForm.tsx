@@ -1,3 +1,4 @@
+import { useConfirmation } from "../../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -47,6 +48,7 @@ const fields: {
 ];
 
 export default function CreateSubjectForm({ onCreated }: Props) {
+  const confirm = useConfirmation();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const locked = useRef(false);
@@ -76,7 +78,7 @@ export default function CreateSubjectForm({ onCreated }: Props) {
     const { accessToken, user } = useAuthStore.getState();
     if (!accessToken || user?.role !== "ADMIN") return;
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Crear la materia "${values.name}"?\n\n` +
         `Código: ${values.code}\n` +
         `Créditos: ${values.credits}\n` +

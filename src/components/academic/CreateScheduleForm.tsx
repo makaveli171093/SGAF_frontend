@@ -1,3 +1,4 @@
+import { useConfirmation } from "../../lib/confirmation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthenticatedMutation } from "../../hooks/useAuthenticatedMutation";
@@ -19,6 +20,7 @@ export default function CreateScheduleForm({
   groupName,
   onCreated,
 }: Props) {
+  const confirm = useConfirmation();
   const { execute, isPending, error } = useAuthenticatedMutation(
     groupSetupService.createSchedule,
   );
@@ -38,7 +40,7 @@ export default function CreateScheduleForm({
   });
 
   async function onSubmit(values: ScheduleFormValues) {
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Agregar este horario a ${groupName}?\n\n` +
         `${scheduleDayLabels[values.dayOfWeek]}: ` +
         `${values.startTime} a ${values.endTime}`,

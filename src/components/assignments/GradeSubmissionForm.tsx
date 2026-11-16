@@ -1,3 +1,4 @@
+import { useConfirmation } from "../../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,6 +21,7 @@ export default function GradeSubmissionForm({
   submission,
   onGraded,
 }: GradeSubmissionFormProps) {
+  const confirm = useConfirmation();
   const [serverError, setServerError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const requestInProgress = useRef(false);
@@ -52,7 +54,7 @@ export default function GradeSubmissionForm({
       return;
     }
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Guardar la calificación ${Number(values.grade)} / 100?${
         submission.grade !== null
           ? " Se actualizará la calificación anterior."

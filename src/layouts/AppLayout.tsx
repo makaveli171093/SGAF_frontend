@@ -1,3 +1,4 @@
+import Avatar from "../components/ui/Avatar";
 import { NavLink, Outlet } from "react-router";
 import { roleLabels } from "../constants/authLabels";
 import { useAuthStore } from "../stores/authStore";
@@ -12,6 +13,8 @@ interface NavigationItem {
 }
 
 const navigationItems: NavigationItem[] = [
+  { to: "/inicio", label: "Inicio" },
+  { to: "/admin/reportes", label: "Métricas y reportes", roles: ["ADMIN"] },
   { to: "/cuenta", label: "Mi cuenta" },
   { to: "/grupos", label: "Grupos académicos" },
   {
@@ -97,7 +100,7 @@ export default function AppLayout() {
 
       <aside className="bg-brand text-white lg:sticky lg:top-0 lg:h-dvh lg:self-start lg:overflow-y-auto">
         <div className="px-6 py-6 lg:px-8 lg:py-8">
-          <p className="text-3xl font-bold tracking-wide">SGAF</p>
+          <p className="text-3xl font-bold tracking-wide">NEXORA</p>
 
           <p className="mt-2 text-sm text-white/80">
             Gestión académica y financiera
@@ -136,12 +139,15 @@ export default function AppLayout() {
       <div className="min-w-0">
         <header className="sticky top-0 z-20 border-b border-border bg-surface px-4 py-4 sm:px-8">
           <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
-            <div className="min-w-0">
-              <p className="text-sm text-ink/70">{roleLabels[user.role]}</p>
+            <div className="flex min-w-0 items-center gap-3">
+              <Avatar user={user} />
+              <div>
+                <p className="text-sm text-ink/70">{roleLabels[user.role]}</p>
 
-              <p className="mt-1 wrap-break-word font-semibold text-brand">
-                {user.firstName} {user.lastName}
-              </p>
+                <p className="mt-1 wrap-break-word font-semibold text-brand">
+                  {user.firstName} {user.lastName}
+                </p>
+              </div>
             </div>
 
             <button

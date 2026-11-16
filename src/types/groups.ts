@@ -2,6 +2,7 @@ export type AcademicPeriodStatus = "PLANNED" | "ACTIVE" | "CLOSED";
 import type { DayOfWeek } from "./enrollments";
 
 export interface AcademicGroup {
+  subjectId: string; academicPeriodId: string; teacherId: string;
   id: string;
   name: string;
   maxCapacity: number;
@@ -30,6 +31,7 @@ export interface AcademicGroup {
   };
 
   scheduleBlocks: {
+    id: string;
     dayOfWeek: DayOfWeek;
     startTime: string;
     endTime: string;
@@ -60,6 +62,7 @@ export interface TeacherGroup {
   };
 
   scheduleBlocks: {
+    id: string;
     dayOfWeek: DayOfWeek;
     startTime: string;
     endTime: string;

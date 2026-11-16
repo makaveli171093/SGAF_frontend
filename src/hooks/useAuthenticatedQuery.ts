@@ -11,6 +11,7 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
 
   const [result, setResult] = useState<{
     loader: QueryLoader<T>;
+    token: string;
     version: number;
     data: T | null;
     error: string | null;
@@ -32,6 +33,7 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
 
         setResult({
           loader: load,
+          token,
           version: requestVersion,
           data,
           error: null,
@@ -47,6 +49,7 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
 
         setResult({
           loader: load,
+          token,
           version: requestVersion,
           data: null,
           error: getApiErrorMessage(error),
@@ -70,6 +73,7 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
       if (
         !current ||
         current.loader !== load ||
+        current.token !== accessToken ||
         current.version !== requestVersion ||
         current.data === null
       ) {
@@ -84,7 +88,7 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
   }
 
   const isCurrentResult =
-    result?.loader === load && result?.version === requestVersion;
+    result?.token === accessToken && result?.loader === load && result?.version === requestVersion;
 
   return {
     data: isCurrentResult ? result.data : null,

@@ -10,7 +10,7 @@ export default function GuestRoute() {
     sessionStatus === "authenticated" && Boolean(user) && Boolean(accessToken);
 
   if (isAuthenticated) {
-    return <Navigate to="/cuenta" replace />;
+    return <Navigate to="/inicio" replace />;
   }
 
   return <Outlet />;

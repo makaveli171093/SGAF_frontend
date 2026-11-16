@@ -1,3 +1,5 @@
+import Pagination from "../components/ui/Pagination";
+import UserActions from "../components/management/UserActions";
 import { useState } from "react";
 import { roleLabels, statusLabels } from "../constants/authLabels";
 import { useAuthenticatedQuery } from "../hooks/useAuthenticatedQuery";
@@ -13,6 +15,7 @@ function normalizeSearch(value: string): string {
 }
 
 export default function AdminUsersPage() {
+  const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -40,6 +43,11 @@ export default function AdminUsersPage() {
 
       return matchesSearch && matchesRole && matchesStatus;
     }) ?? [];
+
+  const visiblePage = Math.min(
+    page,
+    Math.max(1, Math.ceil(filteredUsers.length / 12)),
+  );
 
   function clearFilters() {
     setSearch("");
@@ -94,7 +102,10 @@ export default function AdminUsersPage() {
               id="user-search"
               type="search"
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setPage(1);
+              }}
               aria-describedby="user-search-help"
               className={fieldClass}
             />
@@ -112,7 +123,10 @@ export default function AdminUsersPage() {
             <select
               id="role-filter"
               value={roleFilter}
-              onChange={(event) => setRoleFilter(event.target.value)}
+              onChange={(event) => {
+                setRoleFilter(event.target.value);
+                setPage(1);
+              }}
               className={fieldClass}
             >
               <option value="">Todos los roles</option>
@@ -133,7 +147,10 @@ export default function AdminUsersPage() {
             <select
               id="status-filter"
               value={statusFilter}
-              onChange={(event) => setStatusFilter(event.target.value)}
+              onChange={(event) => {
+                setStatusFilter(event.target.value);
+                setPage(1);
+              }}
               className={fieldClass}
             >
               <option value="">Todos los estados</option>
@@ -195,73 +212,81 @@ export default function AdminUsersPage() {
             </p>
           ) : (
             <div className="grid gap-5 xl:grid-cols-2">
-              {filteredUsers.map((user) => (
-                <article
-                  key={user.id}
-                  className="min-w-0 rounded-2xl border border-border bg-surface p-6"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <h2 className="min-w-0 wrap-break-word text-xl font-semibold text-brand">
-                      {user.firstName} {user.lastName}
-                    </h2>
+              {filteredUsers
+                .slice((visiblePage - 1) * 12, visiblePage * 12)
+                .map((user) => (
+                  <article
+                    key={user.id}
+                    className="min-w-0 rounded-2xl border border-border bg-surface p-6"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <h2 className="min-w-0 wrap-break-word text-xl font-semibold text-brand">
+                        {user.firstName} {user.lastName}
+                      </h2>
 
-                    <span className="rounded-full bg-accent-soft px-3 py-1 text-sm font-medium text-brand">
-                      {roleLabels[user.role]}
-                    </span>
-                  </div>
-
-                  <dl className="mt-5 grid gap-4 sm:grid-cols-2">
-                    <div className="min-w-0">
-                      <dt className="text-sm text-ink/70">Correo</dt>
-                      <dd className="mt-1 wrap-break-word font-medium">
-                        {user.email}
-                      </dd>
+                      <span className="rounded-full bg-accent-soft px-3 py-1 text-sm font-medium text-brand">
+                        {roleLabels[user.role]}
+                      </span>
                     </div>
 
-                    <div>
-                      <dt className="text-sm text-ink/70">Documento</dt>
-                      <dd className="mt-1 wrap-break-word font-medium">
-                        {user.ci}
-                      </dd>
-                    </div>
-
-                    <div>
-                      <dt className="text-sm text-ink/70">Teléfono</dt>
-                      <dd className="mt-1 font-medium">
-                        {user.phone || "No registrado"}
-                      </dd>
-                    </div>
-
-                    <div>
-                      <dt className="text-sm text-ink/70">Estado</dt>
-                      <dd className="mt-1 font-medium">
-                        {statusLabels[user.status]}
-                      </dd>
-                    </div>
-
-                    {user.stundentProfile && (
-                      <div>
-                        <dt className="text-sm text-ink/70">Matrícula</dt>
+                    <dl className="mt-5 grid gap-4 sm:grid-cols-2">
+                      <div className="min-w-0">
+                        <dt className="text-sm text-ink/70">Correo</dt>
                         <dd className="mt-1 wrap-break-word font-medium">
-                          {user.stundentProfile.enrollmentCode}
+                          {user.email}
                         </dd>
                       </div>
-                    )}
 
-                    {user.teacherProfile && (
                       <div>
-                        <dt className="text-sm text-ink/70">Especialidad</dt>
+                        <dt className="text-sm text-ink/70">Documento</dt>
                         <dd className="mt-1 wrap-break-word font-medium">
-                          {user.teacherProfile.specialty}
+                          {user.ci}
                         </dd>
                       </div>
-                    )}
-                  </dl>
-                </article>
-              ))}
+
+                      <div>
+                        <dt className="text-sm text-ink/70">Teléfono</dt>
+                        <dd className="mt-1 font-medium">
+                          {user.phone || "No registrado"}
+                        </dd>
+                      </div>
+
+                      <div>
+                        <dt className="text-sm text-ink/70">Estado</dt>
+                        <dd className="mt-1 font-medium">
+                          {statusLabels[user.status]}
+                        </dd>
+                      </div>
+
+                      {user.stundentProfile && (
+                        <div>
+                          <dt className="text-sm text-ink/70">Matrícula</dt>
+                          <dd className="mt-1 wrap-break-word font-medium">
+                            {user.stundentProfile.enrollmentCode}
+                          </dd>
+                        </div>
+                      )}
+
+                      {user.teacherProfile && (
+                        <div>
+                          <dt className="text-sm text-ink/70">Especialidad</dt>
+                          <dd className="mt-1 wrap-break-word font-medium">
+                            {user.teacherProfile.specialty}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+                    <UserActions user={user} onUpdated={reload} />
+                  </article>
+                ))}
             </div>
           )}
 
+          <Pagination
+            page={visiblePage}
+            total={filteredUsers.length}
+            onChange={setPage}
+          />
           <p className="mt-5 text-sm text-ink/70">
             Los estados corresponden a los registros devueltos en la última
             consulta.

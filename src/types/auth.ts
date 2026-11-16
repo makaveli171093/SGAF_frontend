@@ -7,6 +7,7 @@ export type UserStatus =
   | "INACTIVE";
 
 export interface User {
+  avatarData?: string | null;
   id: string;
   email: string;
   firstName: string;

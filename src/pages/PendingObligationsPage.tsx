@@ -1,3 +1,4 @@
+import PaymentAttempts from "../components/payments/PaymentAttempts";
 import { useState } from "react";
 import { useAuthenticatedQuery } from "../hooks/useAuthenticatedQuery";
 import {
@@ -182,13 +183,14 @@ export default function PendingObligationsPage() {
                         </dd>
                       </div>
                     </dl>
-                    <details className="mt-5 border-t border-border pt-4">
+                    <PaymentAttempts payments={obligation.payments} />
+                    {obligation.payments.some(payment => payment.status === "PENDING") ? <p role="status" className="mt-4 rounded-lg bg-warning-soft p-4 text-warning">Esta obligación ya tiene un pago pendiente. Revisa su detalle antes de registrar otro.</p> : <details className="mt-5 border-t border-border pt-4">
                       <summary className="cursor-pointer rounded font-semibold text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
                         Registrar pago manual
                       </summary>
 
-                      <ManualPaymentForm obligation={obligation} />
-                    </details>
+                      <ManualPaymentForm obligation={obligation} onCreated={reload} />
+                    </details>}
                   </article>
                 );
               })}

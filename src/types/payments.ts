@@ -47,6 +47,7 @@ export interface OnlinePaymentResponse {
 }
 
 export interface PendingObligation {
+  payments: Payment[];
   id: string;
   type: FinancialObligation["type"];
   description: string;

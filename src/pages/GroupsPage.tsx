@@ -1,3 +1,4 @@
+import { useConfirmation } from "../lib/confirmation";
 import { useGroups } from "../hooks/useGroups";
 import type { AcademicPeriodStatus, AcademicGroup } from "../types/groups";
 import { Link } from "react-router";
@@ -11,6 +12,7 @@ const periodLabels: Record<AcademicPeriodStatus, string> = {
 };
 
 export default function GroupsPage() {
+  const confirm = useConfirmation();
   const { groups, isLoading, error, reload } = useGroups();
   const user = useAuthStore((state) => state.user);
 
@@ -26,7 +28,7 @@ export default function GroupsPage() {
   async function handleEnroll(group: AcademicGroup) {
     if (isEnrolling) return;
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Confirmas tu inscripción en ${group.subject.name}, grupo ${group.name}, del período ${group.academicPeriod.name}?\n\nEsta acción genera obligaciones de pago por inscripción y mensualidad según las tarifas de la materia.`,
     );
 

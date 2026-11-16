@@ -1,3 +1,4 @@
+import { useConfirmation } from "../../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -14,11 +15,13 @@ import type { Payment, PendingObligation } from "../../types/payments";
 
 interface ManualPaymentFormProps {
   obligation: PendingObligation;
+  onCreated?: () => void;
 }
 
 export default function ManualPaymentForm({
-  obligation,
+  obligation, onCreated,
 }: ManualPaymentFormProps) {
+  const confirm = useConfirmation();
   const [serverError, setServerError] = useState<string | null>(null);
   const [registeredPayment, setRegisteredPayment] = useState<Payment | null>(
     null,
@@ -57,7 +60,7 @@ export default function ManualPaymentForm({
       `${obligation.student.user.firstName} ` +
       obligation.student.user.lastName;
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Registrar el pago de ${studentName}?\n\n` +
         `Concepto: ${obligation.description}\n` +
         `Importe: ${formatAmount(obligation.amount)}\n` +
@@ -82,6 +85,7 @@ export default function ManualPaymentForm({
       }
 
       setRegisteredPayment(response.payment);
+      onCreated?.();
     } catch (error: unknown) {
       if (useAuthStore.getState().accessToken !== accessToken) {
         return;

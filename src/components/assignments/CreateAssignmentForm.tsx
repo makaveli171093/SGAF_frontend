@@ -1,3 +1,4 @@
+import { useConfirmation } from "../../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +23,7 @@ export default function CreateAssignmentForm({
   groupName,
   onCreated,
 }: CreateAssignmentFormProps) {
+  const confirm = useConfirmation();
   const [serverError, setServerError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -56,7 +58,7 @@ export default function CreateAssignmentForm({
       return;
     }
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Publicar "${values.title}" en ${groupName}?`,
     );
 

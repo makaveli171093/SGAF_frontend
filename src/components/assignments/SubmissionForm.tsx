@@ -1,3 +1,4 @@
+import { useConfirmation } from "../../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +23,7 @@ export default function SubmissionForm({
   dueDate,
   onSubmitted,
 }: SubmissionFormProps) {
+  const confirm = useConfirmation();
   const user = useAuthStore((state) => state.user);
   const [serverError, setServerError] = useState<string | null>(null);
   const requestInProgress = useRef(false);
@@ -57,7 +59,7 @@ export default function SubmissionForm({
       return;
     }
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       "¿Confirmas el envío? Solo se permite una entrega por tarea y no podrás editarla desde esta aplicación.",
     );
 
