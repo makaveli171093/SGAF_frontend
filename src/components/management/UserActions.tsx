@@ -54,7 +54,7 @@ export default function UserActions({
         ]
       : fields;
   return (
-    <div className="mt-5 border-t border-border pt-4">
+    <div className="record-actions mt-5 border-t border-border pt-4">
       <div className="flex flex-wrap gap-3">
         <button className="btn-secondary" onClick={() => setEditing(true)}>
           Editar datos

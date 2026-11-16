@@ -59,7 +59,7 @@ const primaryButton =
 
 export default function PublicHomePage() {
   return (
-    <div className="min-h-dvh bg-canvas">
+    <div className="public-campus min-h-dvh bg-canvas">
       <a
         href="#contenido-publico"
         className="sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:not-sr-only focus:rounded-lg focus:bg-surface focus:p-3"
@@ -104,7 +104,7 @@ export default function PublicHomePage() {
       </header>
 
       <main id="contenido-publico" tabIndex={-1}>
-        <section className="mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-2 lg:py-24">
+        <section className="public-hero mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-2 lg:py-24">
           <div>
             <p className="inline-flex rounded-full border border-accent/30 bg-accent-soft px-4 py-2 text-xs font-semibold tracking-widest text-brand">
               DESDE LA PAZ, HACIA TU FUTURO

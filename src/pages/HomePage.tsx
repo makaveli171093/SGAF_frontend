@@ -1,3 +1,4 @@
+import AppIcon from "../components/ui/AppIcon";
 import { Link } from "react-router";
 import { api } from "../lib/axios";
 import { useAuthStore } from "../stores/authStore";
@@ -32,7 +33,7 @@ export default function HomePage() {
     <section>
       <div className="home-welcome mb-8 rounded-2xl border border-border bg-surface p-6 sm:p-8">
         <p className="text-sm font-semibold text-brand">
-          NEXORA · {roleLabels[user.role]}
+          TU CAMPUS, A TU ALCANCE · {roleLabels[user.role]}
         </p>
         <h1 className="mt-3 text-3xl font-bold text-brand">
           Hola, {user.firstName}
@@ -50,7 +51,9 @@ export default function HomePage() {
         </p>
       )}
       <div className="mb-5 flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold text-brand">Tu actividad</h2>
+        <h2 className="text-lg font-semibold text-brand">
+          Lo importante, a la vista
+        </h2>
         <button className="btn-secondary" onClick={reload} disabled={isLoading}>
           Actualizar
         </button>
@@ -70,11 +73,29 @@ export default function HomePage() {
                 to={card.href}
                 className="activity-card rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-brand focus-visible:outline-2 focus-visible:outline-brand"
               >
+                <div className="mb-5 flex items-center justify-between">
+                  <span className="activity-icon">
+                    <AppIcon
+                      name={
+                        card.href.includes("usuarios")
+                          ? "users"
+                          : card.href.includes("periodos")
+                            ? "calendar"
+                            : card.href.includes("finanzas") ||
+                                card.href.includes("pagos") ||
+                                card.href.includes("obligaciones")
+                              ? "wallet"
+                              : "book"
+                      }
+                    />
+                  </span>
+                  <AppIcon name="arrow" className="text-ink/35" />
+                </div>
                 <p className="text-sm text-ink/70">{card.label}</p>
                 <p className="mt-4 text-4xl font-bold text-brand">
                   {card.value}
                 </p>
-                <p className="mt-6 text-sm font-semibold text-brand">
+                <p className="activity-detail mt-6 text-sm font-semibold text-brand">
                   Ver detalle →
                 </p>
               </Link>
@@ -89,7 +110,15 @@ export default function HomePage() {
           </p>
         </>
       )}
-      <div className="mt-8 flex flex-wrap gap-3">
+      <div className="quick-access mt-8 flex flex-wrap gap-3">
+        <div className="w-full">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-ink/50">
+            SIGUIENTE PASO
+          </p>
+          <h2 className="mb-4 text-lg font-semibold text-brand">
+            Tu espacio, siempre al día
+          </h2>
+        </div>
         <Link className="btn-secondary" to="/cuenta">
           Mi cuenta
         </Link>

@@ -37,10 +37,10 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center p-4 sm:p-8">
+    <main className="login-page flex min-h-dvh items-center justify-center p-4 sm:p-8">
       <div className="grid w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-surface shadow-sm md:grid-cols-2">
         <section className="flex flex-col justify-between bg-brand p-8 text-white sm:p-10">
-          <p className="text-2xl font-bold tracking-tight">SGAF</p>
+          <p className="text-2xl font-bold tracking-tight">NEXORA</p>
 
           <div className="my-10">
             <p className="mb-3 text-sm font-medium uppercase tracking-widest text-white/80">
