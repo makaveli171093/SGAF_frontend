@@ -1,3 +1,4 @@
+import { useConfirmation } from "../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { Link } from "react-router";
@@ -13,6 +14,7 @@ import { useAuthStore } from "../stores/authStore";
 import type { PendingApplicant } from "../types/applicants";
 
 export default function PendingApplicantsPage() {
+  const confirm = useConfirmation();
   const { data, isLoading, error, reload, updateData } = useAuthenticatedQuery(
     applicantsService.getPending,
   );
@@ -32,7 +34,7 @@ export default function PendingApplicantsPage() {
 
     if (!accessToken || user?.role !== "RECEPCIONIST") return;
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Aprobar a ${applicant.firstName} ${applicant.lastName}?\n\n` +
         `Correo: ${applicant.email}\n\n` +
         "Su cuenta quedará activa y podrá iniciar sesión.",

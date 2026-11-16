@@ -1,110 +1,94 @@
-import axios from "axios";
-import { useRef, useState } from "react";
-import { getApiErrorMessage } from "../../lib/apiError";
+import { useState } from "react";
+import { useAuthenticatedMutation } from "../../hooks/useAuthenticatedMutation";
 import { academicPeriodsService } from "../../services/academicPeriods";
-import { useAuthStore } from "../../stores/authStore";
+import { useConfirmation } from "../../lib/confirmation";
+import RecordEditor from "../ui/RecordEditor";
+import PeriodHistory from "../management/PeriodHistory";
 import type { AcademicPeriod } from "../../types/academicPeriods";
-
-interface Props {
+export default function PeriodStatusActions({
+  period,
+  onUpdated,
+}: {
   period: AcademicPeriod;
   onUpdated: () => void;
-}
-
-export default function PeriodStatusActions({ period, onUpdated }: Props) {
-  const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const locked = useRef(false);
-
-  async function updateStatus(status: "ACTIVE" | "CLOSED") {
-    if (locked.current) return;
-
-    const { accessToken, user } = useAuthStore.getState();
-    if (!accessToken || user?.role !== "ADMIN") return;
-
-    setError(null);
-
-    const message =
-      status === "ACTIVE"
-        ? `¿Activar "${period.name}"? El período debe estar dentro de sus fechas de vigencia.`
-        : `¿Cerrar "${period.name}"? El cierre es definitivo. No podrás reabrirlo y dejará de admitir nuevas inscripciones.`;
-
-    if (!window.confirm(message)) return;
-
-    locked.current = true;
-    setPending(true);
-
-    try {
-      await academicPeriodsService.updateStatus(accessToken, period.id, status);
-
-      if (useAuthStore.getState().accessToken !== accessToken) return;
-
-      onUpdated();
-    } catch (error: unknown) {
-      if (useAuthStore.getState().accessToken !== accessToken) return;
-
-      if (axios.isAxiosError(error) && error.response?.status === 401) {
-        useAuthStore.getState().logout();
-        return;
-      }
-
-      const uncertain =
-        axios.isAxiosError(error) &&
-        (!error.response || error.response.status >= 500);
-
-      setError(
-        uncertain
-          ? "No pudimos confirmar el cambio. Actualiza la lista antes de repetirlo."
-          : getApiErrorMessage(error),
-      );
-    } finally {
-      locked.current = false;
-      setPending(false);
-    }
+}) {
+  const [reopen, setReopen] = useState(false),
+    [history, setHistory] = useState(false),
+    confirm = useConfirmation();
+  const mutation = useAuthenticatedMutation(
+    (token: string, status: "ACTIVE" | "CLOSED") =>
+      academicPeriodsService.updateStatus(token, period.id, status),
+  );
+  async function update(status: "ACTIVE" | "CLOSED") {
+    if (
+      !(await confirm(
+        status === "ACTIVE"
+          ? `¿Activar ${period.name}? Debe estar dentro de sus fechas de vigencia.`
+          : `¿Cerrar ${period.name}? Se detendrán las nuevas inscripciones. Solo un administrador podrá reabrirlo con un motivo y dentro de las fechas permitidas.`,
+      ))
+    )
+      return;
+    if (await mutation.execute(status)) onUpdated();
   }
-
-  if (period.status === "CLOSED") {
-    return (
-      <p className="mt-5 text-sm text-ink/70">Este período está cerrado.</p>
-    );
-  }
-
   return (
     <div className="mt-5 border-t border-border pt-4">
       <div className="flex flex-wrap gap-3">
-        {period.status === "PLANNED" && (
-          <button
-            type="button"
-            onClick={() => void updateStatus("ACTIVE")}
-            disabled={pending}
-            className="rounded-lg bg-brand px-4 py-2 font-medium text-white hover:bg-brand-hover disabled:opacity-50"
-          >
-            Activar período
+        {period.status === "CLOSED" ? (
+          <button className="btn-secondary" onClick={() => setReopen(true)}>
+            Reabrir periodo
           </button>
+        ) : (
+          <>
+            {period.status === "PLANNED" && (
+              <button
+                disabled={mutation.isPending}
+                className="btn-primary"
+                onClick={() => void update("ACTIVE")}
+              >
+                Activar periodo
+              </button>
+            )}
+            <button
+              disabled={mutation.isPending}
+              className="btn-secondary"
+              onClick={() => void update("CLOSED")}
+            >
+              Cerrar periodo
+            </button>
+          </>
         )}
-
         <button
-          type="button"
-          onClick={() => void updateStatus("CLOSED")}
-          disabled={pending}
-          className="rounded-lg border border-danger px-4 py-2 font-medium text-danger hover:bg-danger-soft disabled:opacity-50"
+          className="btn-secondary"
+          aria-expanded={history}
+          onClick={() => setHistory(!history)}
         >
-          Cerrar período
+          Historial de reaperturas
         </button>
       </div>
-
-      {pending && (
-        <p role="status" className="mt-3 text-sm">
-          Actualizando estado…
+      {mutation.error && (
+        <p role="alert" className="mt-3 text-danger">
+          {mutation.error}
         </p>
       )}
-
-      {error && (
-        <p
-          role="alert"
-          className="mt-3 rounded-lg bg-danger-soft p-4 text-danger"
-        >
-          {error}
-        </p>
+      {history && <PeriodHistory id={period.id} />}
+      {reopen && (
+        <RecordEditor
+          title={`Reabrir ${period.name}`}
+          path={`/management/periods/${period.id}/reopen`}
+          fields={[
+            {
+              name: "reason",
+              label: "Motivo de reapertura",
+              type: "textarea",
+              minLength: 10,
+              maxLength: 500,
+            },
+          ]}
+          initial={{ reason: "" }}
+          description="Se registran administrador, fecha y motivo. Si aún no inicia, volverá a Planificado; si está vigente, a Activo. Un periodo vencido no se puede reabrir."
+          onClose={() => setReopen(false)}
+          onSaved={onUpdated}
+        />
       )}
     </div>
   );

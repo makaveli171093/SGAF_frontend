@@ -1,3 +1,4 @@
+import { useConfirmation } from "../../lib/confirmation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthenticatedMutation } from "../../hooks/useAuthenticatedMutation";
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function CreateGroupForm({ options, onCreated }: Props) {
+  const confirm = useConfirmation();
   const { execute, isPending, error, success } = useAuthenticatedMutation(
     groupSetupService.createGroup,
   );
@@ -59,7 +61,7 @@ export default function CreateGroupForm({ options, onCreated }: Props) {
   );
 
   async function onSubmit(values: GroupFormValues) {
-    if (!window.confirm(`¿Crear el grupo "${values.name}"?`)) return;
+    if (!await confirm(`¿Crear el grupo "${values.name}"?`)) return;
 
     const created = await execute({
       ...values,

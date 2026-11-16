@@ -1,3 +1,4 @@
+import SubjectActions from "../components/management/SubjectActions";
 import { useState } from "react";
 import CreateSubjectForm from "../components/academic/CreateSubjectForm";
 import { useAuthenticatedQuery } from "../hooks/useAuthenticatedQuery";
@@ -137,6 +138,7 @@ export default function SubjectsPage() {
                   </dd>
                 </div>
               </dl>
+              <SubjectActions subject={subject} onUpdated={reload} />
             </article>
           ))}
         </div>

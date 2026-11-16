@@ -1,3 +1,4 @@
+import { useConfirmation } from "../../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { getApiErrorMessage } from "../../lib/apiError";
@@ -18,6 +19,7 @@ export default function VerifyPaymentActions({
   payment,
   onVerified,
 }: VerifyPaymentActionsProps) {
+  const confirm = useConfirmation();
   const [pendingDecision, setPendingDecision] =
     useState<ManualPaymentDecision | null>(null);
 
@@ -41,7 +43,7 @@ export default function VerifyPaymentActions({
         ? "La obligación quedará pagada y se recalculará la mora."
         : "El pago quedará rechazado y la obligación conservará su estado.";
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Confirmas ${action} este pago?\n\n` +
         `Estudiante: ${student.firstName} ${student.lastName}\n` +
         `Concepto: ${payment.obligation.description}\n` +

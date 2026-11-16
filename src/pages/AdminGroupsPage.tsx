@@ -1,3 +1,5 @@
+import GroupActions from "../components/management/GroupActions";
+import ScheduleActions from "../components/management/ScheduleActions";
 import CreateGroupForm from "../components/academic/CreateGroupForm";
 import CreateScheduleForm from "../components/academic/CreateScheduleForm";
 import { scheduleDayLabels } from "../constants/scheduleLabels";
@@ -132,6 +134,7 @@ export default function AdminGroupsPage() {
                 {group.maxCapacity}
               </p>
 
+              {optionsQuery.data && <GroupActions group={group} options={optionsQuery.data} onUpdated={reloadAll} />}
               <h3 className="mt-5 font-semibold text-brand">Horarios</h3>
 
               {group.scheduleBlocks.length === 0 ? (
@@ -152,6 +155,7 @@ export default function AdminGroupsPage() {
                         {" – "}
                         {timeFormatter.format(new Date(block.endTime))}
                       </span>
+                    <ScheduleActions group={group} block={block} onUpdated={groupsQuery.reload} />
                     </li>
                   ))}
                 </ul>

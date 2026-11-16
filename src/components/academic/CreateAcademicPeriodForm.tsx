@@ -1,3 +1,4 @@
+import { useConfirmation } from "../../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -45,6 +46,7 @@ const fields: {
 export default function CreateAcademicPeriodForm({
   onCreated,
 }: CreateAcademicPeriodFormProps) {
+  const confirm = useConfirmation();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const requestInProgress = useRef(false);
@@ -74,7 +76,7 @@ export default function CreateAcademicPeriodForm({
 
     if (!accessToken || user?.role !== "ADMIN") return;
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Crear el período "${values.name}"?\n\n` +
         `Máximo de créditos: ${values.maxCredits}\n` +
         "Se registrará con estado Planificado.",

@@ -1,3 +1,4 @@
+import { useConfirmation } from "../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { Link } from "react-router";
@@ -38,6 +39,7 @@ const fields: FieldDefinition[] = [
 ];
 
 export default function CreateStaffPage() {
+  const confirm = useConfirmation();
   const [serverError, setServerError] = useState<string | null>(null);
   const [result, setResult] = useState<CreateStaffResponse | null>(null);
   const requestInProgress = useRef(false);
@@ -78,7 +80,7 @@ export default function CreateStaffPage() {
 
     if (!accessToken || user?.role !== "ADMIN") return;
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       `¿Crear la cuenta de ${values.firstName} ${values.lastName}?\n\n` +
         `Correo: ${values.email}\n` +
         `Rol: ${roleLabels[values.role]}\n\n` +

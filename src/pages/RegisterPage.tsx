@@ -1,3 +1,4 @@
+import { useConfirmation } from "../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
 import { Link } from "react-router";
@@ -92,6 +93,7 @@ const fieldGroups: { title: string; fields: FormField[] }[] = [
 ];
 
 export default function RegisterPage() {
+  const confirm = useConfirmation();
   const [serverError, setServerError] = useState<string | null>(null);
   const [result, setResult] = useState<RegisterStudentResponse | null>(null);
 
@@ -123,7 +125,7 @@ export default function RegisterPage() {
 
     setServerError(null);
 
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       "¿Confirmas tu postulación a NEXORA?\n\n" +
         "Se creará tu cuenta pendiente de aprobación y una obligación de matrícula. " +
         "Recepción te orientará para completar el pago y la aprobación.",
