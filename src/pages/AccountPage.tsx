@@ -10,8 +10,8 @@ export default function AccountPage() {
     [saved, setSaved] = useState(false);
   if (!user) return null;
   return (
-    <section className="space-y-6">
-      <div>
+    <section className="account-page">
+      <div className="account-heading">
         <h1 className="text-3xl font-bold text-brand">Mi cuenta</h1>
         <p className="mt-2 text-ink/70">
           Tu información personal y seguridad de acceso.

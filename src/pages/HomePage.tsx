@@ -1,4 +1,5 @@
 import AppIcon from "../components/ui/AppIcon";
+import CampusArtwork from "../components/brand/CampusArtwork";
 import { Link } from "react-router";
 import { api } from "../lib/axios";
 import { useAuthStore } from "../stores/authStore";
@@ -31,16 +32,16 @@ export default function HomePage() {
   };
   return (
     <section>
-      <div className="home-welcome mb-8 rounded-2xl border border-border bg-surface p-6 sm:p-8">
-        <p className="text-sm font-semibold text-brand">
-          TU CAMPUS, A TU ALCANCE · {roleLabels[user.role]}
-        </p>
-        <h1 className="mt-3 text-3xl font-bold text-brand">
-          Hola, {user.firstName}
-        </h1>
-        <p className="mt-3 max-w-2xl leading-relaxed text-ink/70">
-          {messages[user.role]}
-        </p>
+      <div className="home-welcome">
+        <div>
+          <p className="eyebrow">TU CAMPUS · {roleLabels[user.role]}</p>
+          <h1>
+            Hola, {user.firstName}
+            <span className="text-accent">.</span>
+          </h1>
+          <p className="welcome-description">{messages[user.role]}</p>
+        </div>
+        <CampusArtwork />
       </div>
       {user.status === "SUSPEND_FOR_DEBT" && (
         <p className="mb-5 rounded-xl bg-warning-soft p-5 text-warning">
@@ -50,10 +51,11 @@ export default function HomePage() {
           </Link>
         </p>
       )}
-      <div className="mb-5 flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold text-brand">
-          Lo importante, a la vista
-        </h2>
+      <div className="home-section-heading flex items-center justify-between gap-3">
+        <div>
+          <h2>Tu actividad</h2>
+          <p>Lo importante, a la vista.</p>
+        </div>
         <button className="btn-secondary" onClick={reload} disabled={isLoading}>
           Actualizar
         </button>
@@ -96,7 +98,7 @@ export default function HomePage() {
                   {card.value}
                 </p>
                 <p className="activity-detail mt-6 text-sm font-semibold text-brand">
-                  Ver detalle →
+                  Ver detalle <AppIcon name="arrow" />
                 </p>
               </Link>
             ))}
@@ -110,23 +112,21 @@ export default function HomePage() {
           </p>
         </>
       )}
-      <div className="quick-access mt-8 flex flex-wrap gap-3">
-        <div className="w-full">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-ink/50">
-            SIGUIENTE PASO
-          </p>
-          <h2 className="mb-4 text-lg font-semibold text-brand">
-            Tu espacio, siempre al día
-          </h2>
+      <div className="quick-access mt-8">
+        <div>
+          <p className="eyebrow">A UN CLIC</p>
+          <h2>Tu espacio, siempre al día</h2>
         </div>
-        <Link className="btn-secondary" to="/cuenta">
-          Mi cuenta
-        </Link>
-        {user.role === "ADMIN" && (
-          <Link className="btn-primary" to="/admin/reportes">
-            Métricas y reportes
+        <div className="flex flex-wrap gap-3">
+          <Link className="btn-secondary" to="/cuenta">
+            Mi cuenta
           </Link>
-        )}
+          {user.role === "ADMIN" && (
+            <Link className="btn-primary" to="/admin/reportes">
+              Métricas y reportes
+            </Link>
+          )}
+        </div>
       </div>
     </section>
   );

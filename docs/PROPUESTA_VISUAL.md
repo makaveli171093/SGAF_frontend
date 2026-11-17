@@ -1,49 +1,59 @@
-# Propuesta visual NEXORA
+# Rediseño visual NEXORA
 
-Rama `feat/nexora-visual`, basada en `feat/mejoras-operativas`. **Pendiente de revisión visual; no fusionar con main.**
+Rama: `feat/nexora-visual`. Pendiente de aceptación del usuario; no fusionar con `main`.
 
-## Qué cambia
+## Dirección visual
 
-- Verde institucional y dorado conservados. Fondos claros, bordes suaves y tipografía con jerarquía consistente.
-- Barra lateral fija con secciones por rol e iconos SVG locales, sin bibliotecas adicionales.
-- Menú móvil plegable en un diálogo accesible: foco controlado, cierre con Escape y navegación visible al necesitarla.
-- Encabezado compacto con ubicación actual, perfil y cierre de sesión.
-- Inicio personalizado: bienvenida, indicadores reales y accesos directos.
-- Usuarios en tabla compacta con estados y datos de contacto desplegables. Paginación y acciones conservadas.
-- Formularios, confirmaciones, listas, reportes, login y portada pública con acabado consistente.
-- Al navegar, el contenido vuelve al inicio. La barra lateral permanece accesible en listas largas.
-- Respeta la preferencia de movimiento reducido. Los reportes conservan impresión y CSV.
+Esta revisión reemplaza la propuesta verde y dorada por una identidad azul noche, azul intenso y turquesa. Cambia la composición de portada, acceso e inicio, además del estilo compartido por las pantallas académicas, financieras y administrativas.
 
-La rama no cambia contratos de API ni reglas de negocio. Las imágenes existentes se conservan. No contiene datos de demostración ni simulación de pagos.
+| Uso                       | Color     |
+| ------------------------- | --------- |
+| Paneles oscuros y títulos | `#14253f` |
+| Acciones y selección      | `#3155d9` |
+| Acentos decorativos       | `#65e3cf` |
+| Fondo del campus          | `#f3f5fa` |
+| Superficies               | `#ffffff` |
 
-## Revisarla sin afectar main
+- **Manrope** para títulos; **DM Sans** para lectura y controles. Archivos WOFF2 locales con sus licencias OFL en `public/fonts`. No hay solicitudes a Google Fonts durante el uso.
+- Portada editorial con imagen enmarcada, áreas de formación diferenciadas, beneficios y contacto sobre fondo oscuro.
+- Acceso con panel de marca, ilustración vectorial y formulario independiente. Registro con grupos numerados.
+- Campus con navegación fija azul noche, selección azul, perfil y encabezado compacto.
+- Inicio con bienvenida ilustrada e indicadores reales del backend. No se agregan métricas inventadas.
+- Tarjetas, campos, botones, estados, tablas, diálogos y gráficos con tratamiento común.
+- Mi cuenta distribuida en dos columnas en escritorio y una en móvil.
+- Icono de pestaña NEXORA; pantallas de carga y 404 acordes con la identidad.
+- Adaptación móvil, foco visible, movimiento reducido e impresión conservados.
 
-Desde el repositorio del frontend:
+## Alcance
+
+Cambios de presentación. Se mantienen servicios, contratos de API, rutas, autorización, validaciones, cálculos, datos y operaciones existentes. No se agregan dependencias de JavaScript ni cambios al backend o la base de datos. Los SVG son decorativos y no representan métricas.
+
+Los estilos se organizan así:
+
+- `src/index.css`: colores, tipografías, controles compartidos, accesibilidad e impresión.
+- `src/styles/campus.css`: navegación, panel, registros, tablas y cuenta.
+- `src/styles/public.css`: portada, acceso, registro y página no encontrada.
+
+## Actualizar la copia local
+
+Con el servidor detenido y el directorio de trabajo limpio:
 
 ```powershell
 git fetch origin
-git worktree add ..\SGAF-visual --track origin/feat/nexora-visual
-Set-Location ..\SGAF-visual
+git switch feat/nexora-visual
+git pull --ff-only origin feat/nexora-visual
 npm ci
-Copy-Item .env.example .env.local
-```
-
-Configurar `.env.local` con la URL del backend **actualizado de prueba** y luego:
-
-```powershell
 npm run lint
 npm run build
 npm run dev
 ```
 
-Para revisar el compilado, detener `dev` y ejecutar `npm run preview`. Autorizar el origen correspondiente en CORS del backend de prueba.
+Si todavía no existe la rama local, usar `git switch --track origin/feat/nexora-visual` en lugar de `git switch feat/nexora-visual`.
 
-## Qué revisar
+Conservar la configuración actual de `VITE_API_URL` en `.env.local`. El diseño aparece en la dirección que imprime Vite. Un frontend local que apunta a Render sigue operando sobre la base de datos configurada en Render.
 
-1. Escritorio: menú fijo al desplazar listas, contraste, títulos, tabla de usuarios y estados.
-2. Móvil de 390 px: abrir menú, navegar, cerrar con Escape; la página no debe desplazarse horizontalmente. La tabla tiene desplazamiento horizontal propio.
-3. Abrir un editor, cambiar datos y cancelar: debe ofrecer conservar o descartar los cambios.
-4. Gráficos, CSV e impresión; comprobar datos con el backend de prueba.
-5. Portada pública y login. Mantener la identidad visual escogida inicialmente.
+## Verificación
 
-Validado con compilación, lint y recorridos de navegador en escritorio y móvil usando respuestas de prueba externas al repositorio. Pendiente la aceptación del usuario y la prueba integrada con PostgreSQL migrado.
+Lint y compilación sin errores. Revisión en navegador de portada, acceso, validación de campos vacíos, inicio, usuarios, diálogo de edición, cuenta, reportes, formulario de materia y registro. Verificación móvil a 390 px y revisión del ancho mínimo a 320 px.
+
+Las pantallas privadas se revisan con respuestas de prueba en un servidor local externo al repositorio, sin contactar Render ni Supabase. Esas respuestas no se incluyen en la aplicación ni en esta rama. Esta comprobación visual no sustituye una prueba de integración de las operaciones con el backend real.

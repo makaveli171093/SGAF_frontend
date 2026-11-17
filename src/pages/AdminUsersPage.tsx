@@ -74,21 +74,23 @@ export default function AdminUsersPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={reload}
-          disabled={isLoading}
-          className="rounded-lg border border-brand px-4 py-2 font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
-        >
-          {isLoading ? "Cargando…" : "Actualizar"}
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={reload}
+            disabled={isLoading}
+            className="rounded-lg border border-brand px-4 py-2 font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
+          >
+            {isLoading ? "Cargando…" : "Actualizar"}
+          </button>
 
-        <Link
-          to="/admin/usuarios/nuevo"
-          className="rounded-lg bg-brand px-4 py-2 font-semibold text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-        >
-          Crear usuario interno
-        </Link>
+          <Link
+            to="/admin/usuarios/nuevo"
+            className="rounded-lg bg-brand px-4 py-2 font-semibold text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          >
+            Crear usuario interno
+          </Link>
+        </div>
       </div>
 
       <div className="mb-6 rounded-2xl border border-border bg-surface p-5">

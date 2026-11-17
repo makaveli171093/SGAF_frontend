@@ -82,7 +82,7 @@ export default function ReportsPage() {
       </div>
       <form
         onSubmit={filter}
-        className="mb-6 flex flex-wrap items-end gap-4 rounded-2xl border border-border bg-surface p-5"
+        className="report-filters mb-6 flex flex-wrap items-end gap-4 rounded-2xl border border-border bg-surface p-5"
       >
         <label className="text-sm font-medium">
           Desde
@@ -129,7 +129,7 @@ export default function ReportsPage() {
             ].map(([label, value]) => (
               <article
                 key={label}
-                className="rounded-2xl border border-border bg-surface p-5"
+                className="report-stat rounded-2xl border border-border bg-surface p-5"
               >
                 <p className="text-sm text-ink/70">{label}</p>
                 <p className="mt-3 text-2xl font-bold text-brand">{value}</p>
@@ -166,15 +166,24 @@ export default function ReportsPage() {
             >
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data.monthlyRevenue}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="month" />
-                  <YAxis />
+                  <CartesianGrid
+                    stroke="#e3e9f2"
+                    strokeDasharray="4 4"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="month"
+                    axisLine={false}
+                    tickLine={false}
+                    tickMargin={12}
+                  />
+                  <YAxis axisLine={false} tickLine={false} tickMargin={10} />
                   <Tooltip />
                   <Bar
                     dataKey="amount"
                     name="Ingresos Bs"
-                    fill="#1b5146"
-                    radius={[5, 5, 0, 0]}
+                    fill="#3155d9"
+                    radius={[7, 7, 0, 0]}
                     isAnimationActive={false}
                   />
                 </BarChart>

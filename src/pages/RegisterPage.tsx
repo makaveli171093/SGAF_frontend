@@ -174,7 +174,7 @@ export default function RegisterPage() {
     );
 
   return (
-    <div className="min-h-dvh bg-canvas">
+    <div className="registration-page">
       <header className="border-b border-border bg-surface">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-4 px-5 py-5">
           <Link to="/" aria-label="NEXORA, inicio">
@@ -284,7 +284,10 @@ export default function RegisterPage() {
           </section>
         ) : (
           <>
-            <h1 className="text-3xl font-bold text-brand">Postula a NEXORA</h1>
+            <div className="registration-intro">
+              <p className="eyebrow">TU SIGUIENTE CAPÍTULO</p>
+              <h1>Postula a NEXORA</h1>
+            </div>
 
             <p className="mt-3 text-ink/75">
               Completa tus datos para iniciar el proceso de ingreso. El registro
@@ -305,13 +308,14 @@ export default function RegisterPage() {
               aria-busy={isSubmitting}
               className="mt-8 space-y-7"
             >
-              {fieldGroups.map((group) => (
+              {fieldGroups.map((group, index) => (
                 <fieldset
                   key={group.title}
                   disabled={isSubmitting}
                   className="rounded-2xl border border-border bg-surface p-6"
                 >
                   <legend className="px-2 text-lg font-semibold text-brand">
+                    <span aria-hidden="true">{index + 1}</span>
                     {group.title}
                   </legend>
 

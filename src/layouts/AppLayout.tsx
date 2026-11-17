@@ -7,6 +7,7 @@ import PageLoading from "../components/PageLoading";
 import Avatar from "../components/ui/Avatar";
 import Modal from "../components/ui/Modal";
 import AppIcon from "../components/ui/AppIcon";
+import NexoraLogo from "../components/brand/NexoraLogo";
 import type { AppIconName } from "../types/navigation";
 
 interface NavigationItem {
@@ -179,13 +180,7 @@ export default function AppLayout() {
           className="sidebar-brand"
           aria-label="NEXORA, inicio"
         >
-          <span className="brand-mark" aria-hidden="true">
-            N<span>↗</span>
-          </span>
-          <span>
-            <strong>NEXORA</strong>
-            <small>CAMPUS VIRTUAL</small>
-          </span>
+          <NexoraLogo light campus />
         </Link>
         {navigation()}
         <div className="sidebar-foot">
@@ -208,9 +203,7 @@ export default function AppLayout() {
             </button>
             <div className="min-w-0">
               <p className="header-eyebrow">CAMPUS / {roleLabels[user.role]}</p>
-              <p className="truncate text-sm font-semibold text-brand">
-                {active}
-              </p>
+              <p className="header-title truncate">{active}</p>
             </div>
           </div>
           <div className="flex shrink-0 items-center gap-3 sm:gap-5">

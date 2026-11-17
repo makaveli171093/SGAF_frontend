@@ -44,10 +44,7 @@ export default function PasswordForm() {
       <p className="mt-2 text-sm text-ink/70">
         Al guardarla se cerrarán tus sesiones en todos los dispositivos.
       </p>
-      <fieldset
-        disabled={mutation.isPending}
-        className="mt-5 grid gap-4 sm:grid-cols-3"
-      >
+      <fieldset disabled={mutation.isPending} className="mt-5 grid gap-4">
         <label className="text-sm font-medium">
           Contraseña actual
           <input

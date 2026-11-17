@@ -1,4 +1,7 @@
 export type AppIconName =
+  | "code"
+  | "database"
+  | "science"
   | "home"
   | "chart"
   | "user"

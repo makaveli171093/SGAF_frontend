@@ -1,5 +1,8 @@
 import { Link } from "react-router";
 import NexoraLogo from "../components/brand/NexoraLogo";
+import CampusArtwork from "../components/brand/CampusArtwork";
+import AppIcon from "../components/ui/AppIcon";
+import type { AppIconName } from "../types/navigation";
 
 const whatsappUrl =
   "https://wa.me/591611700006?text=" +
@@ -7,10 +10,17 @@ const whatsappUrl =
     "Hola, quiero información sobre la formación y los horarios de NEXORA.",
   );
 
-const areas = [
+const areas: {
+  number: string;
+  title: string;
+  icon: AppIconName;
+  description: string;
+  detail: string;
+}[] = [
   {
     number: "01",
     title: "Programación",
+    icon: "code",
     description:
       "Desarrolla tu pensamiento lógico y aprende a construir soluciones mediante código.",
     detail: "Lógica · Desarrollo de software · Resolución de problemas",
@@ -18,6 +28,7 @@ const areas = [
   {
     number: "02",
     title: "Bases de datos",
+    icon: "database",
     description:
       "Comprende cómo organizar, consultar y trabajar con la información que utilizan las aplicaciones.",
     detail: "Datos · Consultas · Organización de información",
@@ -25,341 +36,271 @@ const areas = [
   {
     number: "03",
     title: "Matemáticas y ciencias",
+    icon: "science",
     description:
       "Refuerza los conceptos que necesitas y aborda tus ejercicios con mayor comprensión.",
     detail: "Apoyo académico · Matemáticas · Ciencias puras",
   },
 ];
-
 const benefits = [
   {
-    title: "Modalidad virtual",
+    title: "Aprende a tu ritmo de vida",
     description:
-      "Estudia desde donde te encuentres y mantén tu formación cerca.",
+      "Modalidad virtual y opciones de horario en la mañana, tarde y noche.",
   },
   {
-    title: "Mañana, tarde y noche",
+    title: "Acompañamiento para avanzar",
     description:
-      "Consulta las opciones de horario y encuentra una que se adapte a tu rutina.",
+      "Tutorías gratuitas para resolver dudas y reforzar tu aprendizaje.",
   },
   {
-    title: "Mensualidades accesibles",
+    title: "Una formación a tu alcance",
     description:
-      "Solicita información sobre los costos de la formación que te interesa.",
-  },
-  {
-    title: "Tutorías gratuitas",
-    description:
-      "Recibe acompañamiento para resolver dudas y reforzar tu aprendizaje.",
+      "Mensualidades accesibles. Consulta los costos y requisitos con nuestro equipo.",
   },
 ];
 
-const primaryButton =
-  "inline-flex items-center justify-center rounded-xl bg-brand px-5 py-3 font-semibold text-white transition-colors hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
-
 export default function PublicHomePage() {
   return (
-    <div className="public-campus min-h-dvh bg-canvas">
-      <a
-        href="#contenido-publico"
-        className="sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:not-sr-only focus:rounded-lg focus:bg-surface focus:p-3"
-      >
+    <div className="public-campus">
+      <a href="#contenido-publico" className="skip-link">
         Saltar al contenido
       </a>
-
-      <header className="border-b border-border bg-surface">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-5 px-5 py-5 sm:px-8">
+      <header className="public-header">
+        <div className="public-header-inner">
           <Link to="/" aria-label="NEXORA, inicio">
             <NexoraLogo />
           </Link>
-
-          <nav
-            aria-label="Navegación pública"
-            className="flex flex-wrap items-center gap-4 text-sm font-medium sm:gap-6"
-          >
-            <a href="#formacion" className="hover:text-brand">
-              Formación
-            </a>
-            <a href="#nosotros" className="hover:text-brand">
-              Nosotros
-            </a>
-            <a href="#contacto" className="hover:text-brand">
-              Contacto
-            </a>
-
-            <Link
-              to="/login"
-              className="rounded-lg border border-brand px-4 py-2 text-brand hover:bg-accent-soft"
-            >
-              Aula virtual
-            </Link>
-            <Link
-              to="/registro"
-              className="rounded-lg bg-brand px-4 py-2 font-semibold text-white hover:bg-brand-hover"
-            >
-              Postularme
-            </Link>
+          <nav aria-label="Navegación pública" className="public-nav">
+            <div className="public-section-nav">
+              <a href="#formacion" className="nav-section-link">
+                Formación
+              </a>
+              <a href="#nosotros" className="nav-section-link">
+                Nosotros
+              </a>
+              <a href="#contacto" className="nav-section-link">
+                Contacto
+              </a>
+            </div>
+            <div className="public-account-nav">
+              <Link to="/login" className="nav-campus">
+                Aula virtual
+              </Link>
+              <Link to="/registro" className="btn-primary">
+                Postularme <AppIcon name="arrow" />
+              </Link>
+            </div>
           </nav>
         </div>
       </header>
 
       <main id="contenido-publico" tabIndex={-1}>
-        <section className="public-hero mx-auto grid max-w-7xl items-center gap-10 px-5 py-14 sm:px-8 lg:grid-cols-2 lg:py-24">
+        <section className="public-hero" aria-labelledby="hero-title">
           <div>
-            <p className="inline-flex rounded-full border border-accent/30 bg-accent-soft px-4 py-2 text-xs font-semibold tracking-widest text-brand">
-              DESDE LA PAZ, HACIA TU FUTURO
-            </p>
-
-            <h1 className="mt-7 text-4xl font-bold leading-tight tracking-tight text-brand sm:text-5xl lg:text-6xl">
-              Conecta tu talento con lo que viene.
+            <p className="eyebrow">DESDE LA PAZ, HACIA TU FUTURO</p>
+            <h1 id="hero-title">
+              Tu talento.
+              <br />
+              Nuevas ideas.
+              <br />
+              <span>Más posibilidades.</span>
             </h1>
-
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink/80">
+            <p className="hero-description">
               Formación técnica en programación y bases de datos, con apoyo
-              académico en matemáticas y ciencias. Aprende en modalidad virtual,
-              con horarios que se adaptan a tu día.
+              académico en matemáticas y ciencias. Conecta lo que te apasiona
+              con lo que viene.
             </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/registro" className={primaryButton}>
-                Postularme
+            <div className="hero-actions">
+              <Link to="/registro" className="btn-primary">
+                Quiero ser parte <AppIcon name="arrow" />
               </Link>
-
-              <a
-                href="#formacion"
-                className="inline-flex items-center justify-center rounded-xl border border-brand px-5 py-3 font-semibold text-brand hover:bg-accent-soft"
-              >
-                Explorar nuestra formación
+              <a href="#formacion" className="hero-link">
+                Explorar formación <AppIcon name="arrow" />
               </a>
             </div>
-
-            <p className="mt-6 text-sm text-ink/70">
-              Modalidad virtual · Tutorías gratuitas · Horarios flexibles
+            <p className="hero-note">
+              <AppIcon name="check" /> Modalidad virtual. Acompañamiento real.
             </p>
           </div>
-
-          <div className="relative">
-            <img
-              src="/images/nexora-hero.png"
-              alt="Ilustración de tecnología y ciencias con una computadora, bases de datos y montañas andinas"
-              width={1536}
-              height={1024}
-              fetchPriority="high"
-              className="w-full rounded-4xl border border-border object-cover shadow-xl shadow-brand/10"
-            />
-
-            <div className="relative mx-5 -mt-6 rounded-2xl border border-border bg-surface p-5 shadow-sm">
-              <p className="font-semibold text-brand">
-                Tecnología, ciencia y nuevas posibilidades.
-              </p>
-              <p className="mt-1 text-sm text-ink/70">
-                Tu siguiente paso comienza con lo que quieres aprender.
-              </p>
+          <div className="hero-visual">
+            <div className="hero-image-frame">
+              <div className="hero-image-top" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </div>
+              <img
+                src="/images/nexora-hero.png"
+                alt="Ilustración de tecnología y ciencias con una computadora, bases de datos y montañas andinas"
+                width={1536}
+                height={1024}
+                fetchPriority="high"
+              />
+              <div className="hero-image-caption">
+                <span>TECNOLOGÍA · CIENCIA · FUTURO</span>
+                <AppIcon name="arrow" />
+              </div>
+            </div>
+            <div className="hero-sticker">
+              <span>
+                <AppIcon name="book" />
+              </span>
+              <div>
+                <strong>Un siguiente paso, contigo.</strong>
+                <small>Formación técnica desde Bolivia</small>
+              </div>
             </div>
           </div>
         </section>
+
+        <div
+          className="benefit-strip"
+          aria-label="Beneficios de estudiar en NEXORA"
+        >
+          <div>
+            <p>
+              <AppIcon name="grid" /> Modalidad virtual
+            </p>
+            <p>
+              <AppIcon name="calendar" /> Tres turnos disponibles
+            </p>
+            <p>
+              <AppIcon name="wallet" /> Mensualidades accesibles
+            </p>
+            <p>
+              <AppIcon name="users" /> Tutorías gratuitas
+            </p>
+          </div>
+        </div>
 
         <section
           id="formacion"
+          className="public-section"
           aria-labelledby="formation-title"
-          className="scroll-mt-6 border-y border-border bg-surface"
         >
-          <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-            <p className="text-sm font-semibold tracking-widest text-brand">
-              ENCUENTRA TU CAMINO
-            </p>
-
-            <h2
-              id="formation-title"
-              className="mt-3 text-3xl font-bold text-brand sm:text-4xl"
-            >
-              Conocimiento que abre posibilidades.
-            </h2>
-
-            <p className="mt-4 max-w-2xl leading-relaxed text-ink/70">
-              Explora nuestras áreas de formación técnica y apoyo académico.
-              Consulta los programas, niveles y horarios disponibles con nuestro
-              equipo.
-            </p>
-
-            <div className="mt-10 grid gap-6 lg:grid-cols-3">
-              {areas.map((area) => (
-                <article
-                  key={area.number}
-                  className="flex flex-col rounded-2xl border border-border bg-canvas p-7"
-                >
-                  <span className="text-sm font-bold tracking-widest text-brand/60">
-                    {area.number}
-                  </span>
-
-                  <h3 className="mt-5 text-2xl font-semibold text-brand">
-                    {area.title}
-                  </h3>
-
-                  <p className="mt-4 flex-1 leading-relaxed text-ink/80">
-                    {area.description}
-                  </p>
-
-                  <p className="mt-6 border-t border-border pt-4 text-sm text-ink/70">
-                    {area.detail}
-                  </p>
-                </article>
-              ))}
+          <div className="section-intro">
+            <div>
+              <p className="eyebrow">ENCUENTRA TU CAMINO</p>
+              <h2 id="formation-title">Conocimiento que abre puertas.</h2>
             </div>
-          </div>
-        </section>
-
-        <section
-          id="nosotros"
-          aria-labelledby="about-title"
-          className="mx-auto grid max-w-7xl scroll-mt-6 gap-10 px-5 py-16 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]"
-        >
-          <div className="rounded-4xl bg-brand p-8 text-white sm:p-10">
-            <p className="text-sm font-semibold tracking-widest text-white/70">
-              SOMOS NEXORA
-            </p>
-
-            <h2
-              id="about-title"
-              className="mt-5 text-3xl font-bold leading-tight sm:text-4xl"
-            >
-              Aprender también es encontrar tu próxima oportunidad.
-            </h2>
-
-            <div
-              aria-hidden="true"
-              className="mt-7 h-1 w-14 rounded-full bg-accent"
-            />
-
-            <p className="mt-7 leading-relaxed text-white/85">
-              Desde La Paz, Bolivia, acercamos la formación técnica y el apoyo
-              académico a quienes quieren desarrollar nuevas habilidades y
-              fortalecer sus conocimientos.
-            </p>
-
-            <p className="mt-4 leading-relaxed text-white/85">
-              Nuestra propuesta combina modalidad virtual, mensualidades
-              accesibles y tutorías gratuitas para acompañarte mientras
-              aprendes.
+            <p>
+              Explora nuestras áreas de formación técnica y apoyo académico.
+              Consulta los programas, niveles y horarios disponibles.
             </p>
           </div>
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            {benefits.map((benefit) => (
-              <article
-                key={benefit.title}
-                className="rounded-2xl border border-border bg-surface p-6"
-              >
-                <span
-                  aria-hidden="true"
-                  className="block h-2 w-8 rounded-full bg-accent"
-                />
-
-                <h3 className="mt-5 text-xl font-semibold text-brand">
-                  {benefit.title}
-                </h3>
-
-                <p className="mt-3 leading-relaxed text-ink/75">
-                  {benefit.description}
-                </p>
+          <div className="formation-grid">
+            {areas.map((area) => (
+              <article key={area.number} className="formation-card">
+                <div className="formation-card-top">
+                  <AppIcon name={area.icon} />
+                  <span>ÁREA / {area.number}</span>
+                </div>
+                <h3>{area.title}</h3>
+                <p>{area.description}</p>
+                <p className="formation-detail">{area.detail}</p>
               </article>
             ))}
           </div>
         </section>
 
         <section
-          id="contacto"
-          aria-labelledby="contact-title"
-          className="scroll-mt-6 border-t border-border bg-accent-soft"
+          id="nosotros"
+          className="public-section about-section"
+          aria-labelledby="about-title"
         >
-          <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-8 lg:grid-cols-2">
+          <div className="about-art">
+            <p>NEXORA / LA PAZ, BOLIVIA</p>
+            <CampusArtwork />
+            <strong>Aprende. Conecta. Avanza.</strong>
+          </div>
+          <div className="about-copy">
+            <p className="eyebrow">UNA COMUNIDAD PARA CRECER</p>
+            <h2 id="about-title">
+              Tu próxima oportunidad empieza aprendiendo.
+            </h2>
+            <p>
+              Desde La Paz, Bolivia, acercamos la formación técnica y el apoyo
+              académico a quienes quieren desarrollar nuevas habilidades y
+              fortalecer sus conocimientos.
+            </p>
+            <div className="about-benefits">
+              {benefits.map((benefit) => (
+                <div key={benefit.title}>
+                  <AppIcon name="check" />
+                  <div>
+                    <h3>{benefit.title}</h3>
+                    <p>{benefit.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="contacto"
+          className="contact-section"
+          aria-labelledby="contact-title"
+        >
+          <div className="contact-inner">
             <div>
-              <p className="text-sm font-semibold tracking-widest text-brand">
-                HABLEMOS DE TU SIGUIENTE PASO
-              </p>
-
-              <h2
-                id="contact-title"
-                className="mt-4 text-3xl font-bold text-brand sm:text-4xl"
-              >
-                ¿Qué te gustaría aprender?
+              <p className="eyebrow">HABLEMOS DE TU SIGUIENTE PASO</p>
+              <h2 id="contact-title">
+                Las buenas ideas
+                <br />
+                empiezan conversando.
               </h2>
-
-              <p className="mt-5 max-w-lg leading-relaxed text-ink/80">
-                Cuéntanos qué área te interesa. Consulta requisitos, costos y
-                horarios antes de iniciar tu postulación.
+              <p>
+                Cuéntanos qué te gustaría aprender. Te orientamos sobre
+                requisitos, costos y horarios antes de iniciar tu postulación.
               </p>
-
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${primaryButton} mt-7`}
+                className="btn-primary"
               >
-                Conversar por WhatsApp
+                Conversar por WhatsApp <AppIcon name="arrow" />
               </a>
             </div>
-
-            <address className="rounded-2xl border border-border bg-surface p-7 not-italic">
-              <dl className="space-y-6">
+            <address className="contact-details">
+              <dl>
                 <div>
-                  <dt className="text-sm text-ink/70">WhatsApp</dt>
-                  <dd className="mt-1 font-semibold text-brand">
+                  <dt>WhatsApp</dt>
+                  <dd>
                     <a
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline-offset-4 hover:underline"
                     >
                       +591 611700006
                     </a>
                   </dd>
                 </div>
-
                 <div>
-                  <dt className="text-sm text-ink/70">Correo electrónico</dt>
-                  <dd className="mt-1 wrap-break-word font-semibold text-brand">
-                    <a
-                      href="mailto:nexora@edu.bo"
-                      className="underline-offset-4 hover:underline"
-                    >
-                      nexora@edu.bo
-                    </a>
+                  <dt>Correo</dt>
+                  <dd>
+                    <a href="mailto:nexora@edu.bo">nexora@edu.bo</a>
                   </dd>
                 </div>
-
                 <div>
-                  <dt className="text-sm text-ink/70">Ubicación</dt>
-                  <dd className="mt-1 font-semibold text-brand">
-                    La Paz, Bolivia
-                  </dd>
+                  <dt>Ubicación</dt>
+                  <dd>La Paz, Bolivia</dd>
                 </div>
-
                 <div>
-                  <dt className="text-sm text-ink/70">Turnos de formación</dt>
-                  <dd className="mt-1 font-semibold text-brand">
-                    Mañana · Tarde · Noche
-                  </dd>
+                  <dt>Turnos</dt>
+                  <dd>Mañana · Tarde · Noche</dd>
                 </div>
               </dl>
             </address>
           </div>
         </section>
       </main>
-
-      <footer className="border-t border-border bg-surface">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-5 px-5 py-8 sm:px-8">
-          <NexoraLogo />
-
-          <p className="text-sm text-ink/70">NEXORA · La Paz, Bolivia</p>
-
-          <Link
-            to="/login"
-            className="text-sm font-semibold text-brand underline underline-offset-4"
-          >
-            Acceder al aula virtual
-          </Link>
-        </div>
+      <footer className="public-footer">
+        <NexoraLogo />
+        <p>NEXORA · La Paz, Bolivia</p>
+        <Link to="/login">Acceder al aula virtual →</Link>
       </footer>
     </div>
   );
