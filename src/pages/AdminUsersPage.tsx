@@ -74,21 +74,23 @@ export default function AdminUsersPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={reload}
-          disabled={isLoading}
-          className="rounded-lg border border-brand px-4 py-2 font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
-        >
-          {isLoading ? "Cargando…" : "Actualizar"}
-        </button>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={reload}
+            disabled={isLoading}
+            className="rounded-lg border border-brand px-4 py-2 font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
+          >
+            {isLoading ? "Cargando…" : "Actualizar"}
+          </button>
 
-        <Link
-          to="/admin/usuarios/nuevo"
-          className="rounded-lg bg-brand px-4 py-2 font-semibold text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-        >
-          Crear usuario interno
-        </Link>
+          <Link
+            to="/admin/usuarios/nuevo"
+            className="rounded-lg bg-brand px-4 py-2 font-semibold text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          >
+            Crear usuario interno
+          </Link>
+        </div>
       </div>
 
       <div className="mb-6 rounded-2xl border border-border bg-surface p-5">
@@ -211,74 +213,102 @@ export default function AdminUsersPage() {
               No hay usuarios que coincidan con los filtros.
             </p>
           ) : (
-            <div className="grid gap-5 xl:grid-cols-2">
-              {filteredUsers
-                .slice((visiblePage - 1) * 12, visiblePage * 12)
-                .map((user) => (
-                  <article
-                    key={user.id}
-                    className="min-w-0 rounded-2xl border border-border bg-surface p-6"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <h2 className="min-w-0 wrap-break-word text-xl font-semibold text-brand">
-                        {user.firstName} {user.lastName}
-                      </h2>
-
-                      <span className="rounded-full bg-accent-soft px-3 py-1 text-sm font-medium text-brand">
-                        {roleLabels[user.role]}
-                      </span>
-                    </div>
-
-                    <dl className="mt-5 grid gap-4 sm:grid-cols-2">
-                      <div className="min-w-0">
-                        <dt className="text-sm text-ink/70">Correo</dt>
-                        <dd className="mt-1 wrap-break-word font-medium">
-                          {user.email}
-                        </dd>
-                      </div>
-
-                      <div>
-                        <dt className="text-sm text-ink/70">Documento</dt>
-                        <dd className="mt-1 wrap-break-word font-medium">
-                          {user.ci}
-                        </dd>
-                      </div>
-
-                      <div>
-                        <dt className="text-sm text-ink/70">Teléfono</dt>
-                        <dd className="mt-1 font-medium">
-                          {user.phone || "No registrado"}
-                        </dd>
-                      </div>
-
-                      <div>
-                        <dt className="text-sm text-ink/70">Estado</dt>
-                        <dd className="mt-1 font-medium">
-                          {statusLabels[user.status]}
-                        </dd>
-                      </div>
-
-                      {user.stundentProfile && (
-                        <div>
-                          <dt className="text-sm text-ink/70">Matrícula</dt>
-                          <dd className="mt-1 wrap-break-word font-medium">
-                            {user.stundentProfile.enrollmentCode}
-                          </dd>
-                        </div>
-                      )}
-
-                      {user.teacherProfile && (
-                        <div>
-                          <dt className="text-sm text-ink/70">Especialidad</dt>
-                          <dd className="mt-1 wrap-break-word font-medium">
-                            {user.teacherProfile.specialty}
-                          </dd>
-                        </div>
-                      )}
-                    </dl>
-                    <UserActions user={user} onUpdated={reload} />
-                  </article>
-                ))}
+            <div className="overflow-x-auto rounded-2xl border border-border bg-surface">
+              <table className="directory-table">
+                <caption className="sr-only">
+                  Directorio de usuarios y acciones administrativas
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Persona</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredUsers
+                    .slice((visiblePage - 1) * 12, visiblePage * 12)
+                    .map((user) => (
+                      <tr key={user.id}>
+                        <td className="min-w-[230px]">
+                          <div className="flex items-center gap-3">
+                            <span
+                              aria-hidden="true"
+                              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-soft text-sm font-semibold text-brand"
+                            >
+                              {user.firstName.charAt(0)}
+                              {user.lastName.charAt(0)}
+                            </span>
+                            <div>
+                              <p className="font-semibold text-brand">
+                                {user.firstName} {user.lastName}
+                              </p>
+                              <p className="mt-1 text-xs text-ink/60">
+                                {user.email}
+                              </p>
+                            </div>
+                          </div>
+                          <details className="mt-3 text-xs">
+                            <summary className="cursor-pointer text-brand">
+                              Ver datos de contacto
+                            </summary>
+                            <dl className="mt-3 space-y-2 text-xs text-ink/70">
+                              <div>
+                                <dt className="inline font-semibold">
+                                  Documento:{" "}
+                                </dt>
+                                <dd className="inline">{user.ci}</dd>
+                              </div>
+                              <div>
+                                <dt className="inline font-semibold">
+                                  Teléfono:{" "}
+                                </dt>
+                                <dd className="inline">
+                                  {user.phone || "No registrado"}
+                                </dd>
+                              </div>
+                              {user.stundentProfile && (
+                                <div>
+                                  <dt className="inline font-semibold">
+                                    Matrícula:{" "}
+                                  </dt>
+                                  <dd className="inline">
+                                    {user.stundentProfile.enrollmentCode}
+                                  </dd>
+                                </div>
+                              )}
+                              {user.teacherProfile && (
+                                <div>
+                                  <dt className="inline font-semibold">
+                                    Especialidad:{" "}
+                                  </dt>
+                                  <dd className="inline">
+                                    {user.teacherProfile.specialty}
+                                  </dd>
+                                </div>
+                              )}
+                            </dl>
+                          </details>
+                        </td>
+                        <td className="whitespace-nowrap">
+                          {roleLabels[user.role]}
+                        </td>
+                        <td>
+                          <span
+                            className="status-pill"
+                            data-status={user.status}
+                          >
+                            {statusLabels[user.status]}
+                          </span>
+                        </td>
+                        <td className="min-w-[190px]">
+                          <UserActions user={user} onUpdated={reload} />
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
             </div>
           )}
 

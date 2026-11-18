@@ -2,9 +2,12 @@ import { Link } from "react-router";
 
 export default function NotFoundPage() {
   return (
-    <main className="flex min-h-dvh items-center justify-center p-6">
+    <main className="empty-page flex min-h-dvh items-center justify-center p-6">
       <section className="w-full max-w-md rounded-2xl border border-border bg-surface p-8 text-center">
-        <p className="text-sm font-semibold text-brand">SGAF · 404</p>
+        <p className="empty-page-code">404</p>
+        <p className="text-sm font-semibold text-brand">
+          NEXORA · Aula virtual
+        </p>
 
         <h1 className="mt-3 text-2xl font-semibold text-brand">
           Página no encontrada

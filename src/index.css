@@ -1,55 +1,318 @@
 @import "tailwindcss";
+@import "./styles/campus.css";
+@import "./styles/public.css";
+
+/* Fuentes locales: no se realizan solicitudes a Google Fonts. */
+@font-face {
+  font-family: "DM Sans";
+  src: url("/fonts/dm-sans-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/manrope-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+}
 
 @theme {
-  --color-brand: #1b5146;
-  --color-brand-hover: #2a6b5d;
-
-  --color-accent: #b68a3d;
-  --color-accent-soft: #f6f0e2;
-
-  --color-canvas: #f5f6f2;
+  --font-sans: "DM Sans", "Segoe UI", sans-serif;
+  --font-display: "Manrope", "Segoe UI", sans-serif;
+  --color-brand: #3155d9;
+  --color-brand-hover: #2442b4;
+  --color-accent: #65e3cf;
+  --color-accent-soft: #e9f8f4;
+  --color-canvas: #f3f5fa;
   --color-surface: #ffffff;
-  --color-ink: #293b35;
-  --color-border: #e4e8e1;
-
-  --color-success: #28735a;
-  --color-success-soft: #eaf4ed;
-
-  --color-warning: #a97524;
-  --color-warning-soft: #fff7e8;
-
-  --color-danger: #b64848;
-  --color-danger-soft: #fff1f0;
+  --color-ink: #23334b;
+  --color-border: #dfe5ef;
+  --color-success: #177352;
+  --color-success-soft: #e9f8f0;
+  --color-warning: #8a5715;
+  --color-warning-soft: #fff5df;
+  --color-danger: #b43b51;
+  --color-danger-soft: #fff0f2;
+  --color-midnight: #14253f;
 }
 
 @layer base {
+  :root {
+    font-family: var(--font-sans);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    color-scheme: light;
+  }
   body {
     margin: 0;
-    min-width: 320px;
-    background-color: var(--color-canvas);
+    min-width: 280px;
+    background: var(--color-canvas);
     color: var(--color-ink);
-    font-family: system-ui, sans-serif;
   }
-
+  h1,
+  h2,
+  h3,
+  legend {
+    font-family: var(--font-display);
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
   button,
   input,
   select,
   textarea {
     font: inherit;
   }
-
-  button:not(:disabled) {
+  button:not(:disabled),
+  summary {
     cursor: pointer;
   }
-
   button:disabled {
     cursor: not-allowed;
+  }
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button,
+  a {
+    touch-action: manipulation;
+  }
+  a,
+  button {
+    transition:
+      background-color 160ms,
+      border-color 160ms,
+      color 160ms,
+      box-shadow 160ms;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 4px;
+  }
+  input,
+  select,
+  textarea {
+    accent-color: var(--color-brand);
+  }
+  ::selection {
+    background: #c8f7ed;
+    color: #14253f;
   }
 }
 
 @layer components {
- .btn-primary { @apply rounded-lg bg-brand px-4 py-2 font-semibold text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50; }
- .btn-secondary { @apply rounded-lg border border-border bg-surface px-4 py-2 text-sm font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50; }
- .form-field { @apply mt-2 w-full rounded-lg border border-border bg-surface p-3 focus:border-brand focus:outline-2 focus:outline-brand; }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white hover:bg-brand-hover disabled:opacity-50;
+    box-shadow: 0 4px 10px #3155d91a;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-sm font-semibold text-ink hover:border-brand/30 hover:bg-brand/5 disabled:opacity-50;
+  }
+  .form-field {
+    @apply mt-2 w-full rounded-xl border border-border bg-surface px-3.5 py-3 focus:border-brand focus:outline-2 focus:outline-brand/20;
+  }
 }
-@media print { aside, header, nav, button, form, .no-print { display:none !important; } main { max-width:none !important; padding:0 !important; } body { background:white; } article, table { break-inside:avoid; } }
+
+/* Controles compartidos por los formularios existentes. */
+:where(.workspace-main, .registration-page, .auth-page, dialog)
+  :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    select,
+    textarea
+  ) {
+  min-height: 46px;
+  border-radius: 10px;
+  background-color: #fbfcfe;
+  border-color: #d8dfeb;
+  padding-inline: 14px;
+  color: var(--color-ink);
+  transition:
+    border-color 160ms,
+    box-shadow 160ms;
+}
+:where(.workspace-main, .registration-page, .auth-page, dialog)
+  :is(input, select, textarea):focus {
+  border-color: var(--color-brand);
+  outline: 2px solid #3155d924;
+  outline-offset: 2px;
+  background-color: white;
+}
+:where(input, select, textarea)[aria-invalid="true"] {
+  border-color: var(--color-danger);
+}
+:where(.workspace-main, .registration-page, .auth-page, dialog) label {
+  color: #41516b;
+  font-size: 13px;
+  font-weight: 600;
+}
+:where(.workspace-main, .registration-page, .auth-page, dialog)
+  input::placeholder {
+  color: #718099;
+}
+input[type="file"]::file-selector-button {
+  padding: 9px 12px;
+  margin-right: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: #edf1ff;
+  color: #2546ba;
+  font: inherit;
+  cursor: pointer;
+}
+input[type="file"] {
+  max-width: 100%;
+}
+:where(.workspace-main, dialog) .bg-warning-soft {
+  border-left: 3px solid #daa444;
+}
+:where(.workspace-main, dialog) .bg-danger-soft {
+  border-left: 3px solid var(--color-danger);
+}
+:where(.workspace-main, dialog) .bg-success-soft {
+  border-left: 3px solid var(--color-success);
+}
+dialog {
+  box-shadow: 0 24px 100px #0b183d38;
+  border-radius: 20px;
+}
+dialog::backdrop {
+  background: #101e37a3;
+  backdrop-filter: blur(5px);
+}
+dialog > div:first-child {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+dialog h2 {
+  color: var(--color-midnight);
+}
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+.skip-link {
+  position: fixed;
+  left: 20px;
+  top: -100px;
+  z-index: 100;
+  border-radius: 10px;
+  padding: 12px 20px;
+  color: var(--color-brand);
+  background: white;
+}
+.skip-link:focus {
+  top: 16px;
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+}
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--color-midnight);
+}
+.brand-logo svg {
+  width: 40px;
+  height: 40px;
+}
+.brand-logo strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+}
+.brand-logo small {
+  display: block;
+  margin-top: 4px;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.brand-logo--light {
+  color: white;
+}
+.loading-mark {
+  display: block;
+  margin: 0 auto 18px;
+  width: 44px;
+  height: 44px;
+  border: 3px solid #dfe5ef;
+  border-top-color: var(--color-brand);
+  border-radius: 50%;
+  animation: loading-turn 900ms linear infinite;
+}
+@keyframes loading-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+@media print {
+  aside,
+  header,
+  nav,
+  button,
+  form,
+  .no-print,
+  .workspace-footer,
+  .campus-art {
+    display: none !important;
+  }
+  body,
+  .app-shell {
+    background: white !important;
+    display: block !important;
+  }
+  main.workspace-main {
+    max-width: none;
+    padding: 0;
+  }
+  article,
+  table,
+  .recharts-wrapper {
+    break-inside: avoid;
+  }
+  .home-welcome {
+    background: white !important;
+    color: #14253f !important;
+  }
+  .home-welcome p,
+  .home-welcome h1 {
+    color: #14253f !important;
+  }
+}

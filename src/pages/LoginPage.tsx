@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router";
+import NexoraLogo from "../components/brand/NexoraLogo";
+import CampusArtwork from "../components/brand/CampusArtwork";
+import AppIcon from "../components/ui/AppIcon";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -37,40 +41,35 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-dvh items-center justify-center p-4 sm:p-8">
-      <div className="grid w-full max-w-4xl overflow-hidden rounded-2xl border border-border bg-surface shadow-sm md:grid-cols-2">
-        <section className="flex flex-col justify-between bg-brand p-8 text-white sm:p-10">
-          <p className="text-2xl font-bold tracking-tight">SGAF</p>
-
-          <div className="my-10">
-            <p className="mb-3 text-sm font-medium uppercase tracking-widest text-white/80">
-              Gestión académica y financiera
-            </p>
-
-            <h1 className="text-3xl font-semibold leading-tight">
-              Tu comunidad educativa,
-              <br />
-              en un mismo lugar.
-            </h1>
-
-            <p className="mt-5 leading-relaxed text-white/80">
-              Accede a tus actividades académicas y gestiona la información que
-              corresponde a tu cuenta.
-            </p>
-          </div>
-
-          <div className="h-1 w-16 rounded-full bg-accent" />
-        </section>
-
-        <section
-          className="flex flex-col justify-center p-8 sm:p-10"
-          aria-labelledby="login-title"
-        >
-          <h2 id="login-title" className="text-2xl font-semibold text-brand">
-            Iniciar sesión
-          </h2>
-
-          <p className="mt-2 text-sm">Ingresa con tu correo y contraseña.</p>
+    <main className="auth-page">
+      <section className="auth-story">
+        <Link to="/" aria-label="NEXORA, inicio">
+          <NexoraLogo light campus />
+        </Link>
+        <div className="auth-story-center">
+          <p className="eyebrow">TU CAMPUS, A TU ALCANCE</p>
+          <h1>
+            Un espacio para aprender.
+            <br />
+            <span>Y seguir creciendo.</span>
+          </h1>
+          <CampusArtwork />
+        </div>
+        <div className="auth-story-foot">
+          <span>Gestión académica y financiera</span>
+          <span>La Paz, Bolivia</span>
+        </div>
+      </section>
+      <section className="auth-form-panel" aria-labelledby="login-title">
+        <div className="auth-form-inner">
+          <Link to="/" className="auth-back">
+            <AppIcon name="arrow" /> Volver a NEXORA
+          </Link>
+          <p className="eyebrow">AULA VIRTUAL</p>
+          <h2 id="login-title">Qué bueno verte.</h2>
+          <p className="auth-description">
+            Inicia sesión con tu correo y contraseña para acceder a tu espacio.
+          </p>
 
           <form
             className="mt-8 space-y-5"
@@ -151,11 +150,17 @@ export default function LoginPage() {
               disabled={isSubmitting}
               className="w-full rounded-lg bg-brand px-4 py-3 font-medium text-white transition-colors hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
             >
-              {isSubmitting ? "Ingresando…" : "Ingresar"}
+              {isSubmitting ? "Ingresando…" : "Ingresar al campus"}
             </button>
           </form>
-        </section>
-      </div>
+          <p className="auth-register-link">
+            ¿Aún no eres parte? <Link to="/registro">Postula aquí →</Link>
+          </p>
+          <p className="auth-footer">
+            NEXORA · Tu comunidad educativa, en un mismo lugar.
+          </p>
+        </div>
+      </section>
     </main>
   );
 }

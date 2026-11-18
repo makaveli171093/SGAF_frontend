@@ -1,175 +1,254 @@
-import Avatar from "../components/ui/Avatar";
-import { NavLink, Outlet } from "react-router";
+import { NavLink, Outlet, useLocation, Link } from "react-router";
+import { Suspense, useEffect, useState } from "react";
 import { roleLabels } from "../constants/authLabels";
 import { useAuthStore } from "../stores/authStore";
 import type { UserRole } from "../types/auth";
-import { Suspense } from "react";
 import PageLoading from "../components/PageLoading";
+import Avatar from "../components/ui/Avatar";
+import Modal from "../components/ui/Modal";
+import AppIcon from "../components/ui/AppIcon";
+import NexoraLogo from "../components/brand/NexoraLogo";
+import type { AppIconName } from "../types/navigation";
 
 interface NavigationItem {
   to: string;
   label: string;
+  icon: AppIconName;
+  section: string;
   roles?: UserRole[];
 }
-
 const navigationItems: NavigationItem[] = [
-  { to: "/inicio", label: "Inicio" },
-  { to: "/admin/reportes", label: "Métricas y reportes", roles: ["ADMIN"] },
-  { to: "/cuenta", label: "Mi cuenta" },
-  { to: "/grupos", label: "Grupos académicos" },
+  { to: "/inicio", label: "Inicio", icon: "home", section: "MI ESPACIO" },
+  {
+    to: "/admin/reportes",
+    label: "Métricas y reportes",
+    icon: "chart",
+    section: "MI ESPACIO",
+    roles: ["ADMIN"],
+  },
+  {
+    to: "/grupos",
+    label: "Grupos académicos",
+    icon: "grid",
+    section: "ACADÉMICO",
+  },
   {
     to: "/mis-inscripciones",
     label: "Mis inscripciones",
-    roles: ["STUDENT"],
-  },
-  {
-    to: "/mis-finanzas",
-    label: "Mis finanzas",
+    icon: "book",
+    section: "ACADÉMICO",
     roles: ["STUDENT"],
   },
   {
     to: "/mis-tareas",
     label: "Mis tareas",
+    icon: "task",
+    section: "ACADÉMICO",
+    roles: ["STUDENT"],
+  },
+  {
+    to: "/mis-finanzas",
+    label: "Mis finanzas",
+    icon: "wallet",
+    section: "ACADÉMICO",
     roles: ["STUDENT"],
   },
   {
     to: "/docente/grupos",
     label: "Mis grupos",
+    icon: "users",
+    section: "ACADÉMICO",
     roles: ["TEACHER"],
   },
   {
     to: "/docente/tareas",
     label: "Tareas publicadas",
+    icon: "task",
+    section: "ACADÉMICO",
     roles: ["TEACHER"],
   },
   {
     to: "/recepcion/obligaciones",
     label: "Obligaciones pendientes",
+    icon: "wallet",
+    section: "RECEPCIÓN",
     roles: ["RECEPCIONIST"],
   },
   {
     to: "/recepcion/pagos",
     label: "Pagos por verificar",
+    icon: "check",
+    section: "RECEPCIÓN",
     roles: ["RECEPCIONIST"],
   },
   {
     to: "/recepcion/postulantes",
-    label: "Postulantes pendientes",
+    label: "Postulantes",
+    icon: "users",
+    section: "RECEPCIÓN",
     roles: ["RECEPCIONIST"],
   },
   {
     to: "/admin/usuarios",
     label: "Usuarios",
+    icon: "users",
+    section: "ADMINISTRACIÓN",
     roles: ["ADMIN"],
   },
   {
     to: "/admin/periodos",
-    label: "Períodos académicos",
+    label: "Periodos académicos",
+    icon: "calendar",
+    section: "ADMINISTRACIÓN",
     roles: ["ADMIN"],
   },
   {
     to: "/admin/materias",
     label: "Materias",
+    icon: "book",
+    section: "ADMINISTRACIÓN",
     roles: ["ADMIN"],
   },
   {
     to: "/admin/grupos",
     label: "Grupos y horarios",
+    icon: "grid",
+    section: "ADMINISTRACIÓN",
     roles: ["ADMIN"],
   },
+  { to: "/cuenta", label: "Mi cuenta", icon: "user", section: "PERSONAL" },
 ];
-
 export default function AppLayout() {
-  const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
-
+  const user = useAuthStore((state) => state.user),
+    logout = useAuthStore((state) => state.logout),
+    location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+    document.getElementById("contenido")?.focus({ preventScroll: true });
+  }, [location.pathname]);
   if (!user) return null;
-
-  const visibleNavigationItems = navigationItems.filter(
+  const items = navigationItems.filter(
     (item) => !item.roles || item.roles.includes(user.role),
   );
-
-  return (
-    <div className="min-h-dvh lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
-      <a
-        href="#contenido"
-        className="sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:not-sr-only focus:rounded-lg focus:bg-surface focus:px-4 focus:py-3 focus:text-brand"
+  const sections = [...new Set(items.map((item) => item.section))];
+  const active =
+    items.find((item) => item.to === location.pathname)?.label ??
+    (location.pathname.includes("/entregas")
+      ? "Entregas de la tarea"
+      : location.pathname === "/admin/usuarios/nuevo"
+        ? "Crear usuario"
+        : "Aula virtual");
+  function navigation(mobile = false) {
+    return (
+      <nav
+        aria-label={mobile ? "Navegación móvil" : "Navegación principal"}
+        className="nexora-nav"
       >
+        {sections.map((section) => (
+          <div key={section} className="nav-section">
+            <p className="nav-section-label">{section}</p>
+            {items
+              .filter((item) => item.section === section)
+              .map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) =>
+                    `nav-item ${isActive ? "is-active" : ""}`
+                  }
+                >
+                  <AppIcon name={item.icon} />
+                  <span>{item.label}</span>
+                </NavLink>
+              ))}
+          </div>
+        ))}
+      </nav>
+    );
+  }
+  return (
+    <div className="app-shell">
+      <a href="#contenido" className="skip-link">
         Saltar al contenido
       </a>
-
-      <aside className="bg-brand text-white lg:sticky lg:top-0 lg:h-dvh lg:self-start lg:overflow-y-auto">
-        <div className="px-6 py-6 lg:px-8 lg:py-8">
-          <p className="text-3xl font-bold tracking-wide">NEXORA</p>
-
-          <p className="mt-2 text-sm text-white/80">
-            Gestión académica y financiera
-          </p>
-
-          <div
-            aria-hidden="true"
-            className="mt-5 h-1 w-12 rounded-full bg-accent"
-          />
+      <aside className="desktop-sidebar">
+        <Link
+          to="/inicio"
+          className="sidebar-brand"
+          aria-label="NEXORA, inicio"
+        >
+          <NexoraLogo light campus />
+        </Link>
+        {navigation()}
+        <div className="sidebar-foot">
+          <span className="sidebar-foot-line" />
+          <p>Aprende. Conecta. Avanza.</p>
+          <small>La Paz, Bolivia</small>
         </div>
-
-        <nav aria-label="Navegación principal" className="space-y-2 px-4 pb-6">
-          {visibleNavigationItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end
-              className={({ isActive }) =>
-                [
-                  "block rounded-xl px-4 py-3 text-sm font-semibold",
-                  "transition-colors",
-                  "focus-visible:outline-2 focus-visible:outline-offset-2",
-                  "focus-visible:outline-white",
-                  isActive
-                    ? "bg-accent-soft text-brand"
-                    : "text-white/90 hover:bg-brand-hover",
-                ].join(" ")
-              }
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
       </aside>
-
-      <div className="min-w-0">
-        <header className="sticky top-0 z-20 border-b border-border bg-surface px-4 py-4 sm:px-8">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
-            <div className="flex min-w-0 items-center gap-3">
-              <Avatar user={user} />
-              <div>
-                <p className="text-sm text-ink/70">{roleLabels[user.role]}</p>
-
-                <p className="mt-1 wrap-break-word font-semibold text-brand">
+      <div className="app-content">
+        <header className="app-header">
+          <div className="flex min-w-0 items-center gap-3">
+            <button
+              type="button"
+              aria-label="Abrir menú"
+              aria-expanded={mobileOpen}
+              onClick={() => setMobileOpen(true)}
+              className="menu-trigger"
+            >
+              <AppIcon name="menu" />
+            </button>
+            <div className="min-w-0">
+              <p className="header-eyebrow">CAMPUS / {roleLabels[user.role]}</p>
+              <p className="header-title truncate">{active}</p>
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center gap-3 sm:gap-5">
+            <Link
+              to="/cuenta"
+              className="header-profile"
+              aria-label="Mi cuenta"
+            >
+              <div className="hidden text-right md:block">
+                <p className="text-sm font-semibold">
                   {user.firstName} {user.lastName}
                 </p>
+                <p className="mt-0.5 text-xs text-ink/60">
+                  {roleLabels[user.role]}
+                </p>
               </div>
-            </div>
-
+              <Avatar user={user} />
+            </Link>
             <button
               type="button"
               onClick={logout}
-              className="rounded-lg border border-brand px-4 py-2 text-sm font-medium text-brand transition-colors hover:bg-brand hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              className="logout-button"
+              aria-label="Cerrar sesión"
+              title="Cerrar sesión"
             >
-              Cerrar sesión
+              <AppIcon name="exit" />
+              <span className="hidden xl:inline">Salir</span>
             </button>
           </div>
         </header>
-
-        <main
-          id="contenido"
-          tabIndex={-1}
-          className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8"
-        >
+        <main id="contenido" tabIndex={-1} className="workspace-main">
           <Suspense fallback={<PageLoading />}>
             <Outlet />
           </Suspense>
         </main>
+        <footer className="workspace-footer">
+          <span>NEXORA · Gestión académica y financiera</span>
+          <span>La Paz, Bolivia</span>
+        </footer>
       </div>
+      {mobileOpen && (
+        <Modal title="NEXORA · Menú" onClose={() => setMobileOpen(false)}>
+          <div className="mobile-navigation">{navigation(true)}</div>
+        </Modal>
+      )}
     </div>
   );
 }

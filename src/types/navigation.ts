@@ -1,0 +1,17 @@
+export type AppIconName =
+  | "code"
+  | "database"
+  | "science"
+  | "home"
+  | "chart"
+  | "user"
+  | "users"
+  | "book"
+  | "calendar"
+  | "grid"
+  | "task"
+  | "wallet"
+  | "arrow"
+  | "menu"
+  | "exit"
+  | "check";
