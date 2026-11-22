@@ -1,3 +1,6 @@
+import { useCurrentTime } from "../hooks/useCurrentTime";
+import { useAssignmentList } from "../components/assignments/AssignmentList";
+import { ListSkeleton, RefreshButton } from "../components/ui/Loading";
 import { Link } from "react-router";
 import { useAuthenticatedQuery } from "../hooks/useAuthenticatedQuery";
 import { assignmentsService } from "../services/assignments";
@@ -11,7 +14,11 @@ const dateFormatter = new Intl.DateTimeFormat("es-BO", {
 export default function TeacherAssignmentsPage() {
   const { data, isLoading, error, reload } = useAuthenticatedQuery(
     assignmentsService.getTeacherAssignments,
+    true,
   );
+
+  const assignments = data?.assignments ?? [];
+  const { items, controls, pagination } = useAssignmentList(assignments, useCurrentTime());
 
   return (
     <section aria-labelledby="teacher-assignments-title">
@@ -29,14 +36,7 @@ export default function TeacherAssignmentsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={reload}
-          disabled={isLoading}
-          className="rounded-lg border border-brand px-4 py-2 font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
-        >
-          {isLoading ? "Cargando…" : "Actualizar"}
-        </button>
+        <RefreshButton busy={isLoading} onClick={reload} />
       </div>
 
       <Link
@@ -46,11 +46,7 @@ export default function TeacherAssignmentsPage() {
         Ir a mis grupos para publicar una tarea
       </Link>
 
-      {isLoading && (
-        <p role="status" className="rounded-xl bg-surface p-6">
-          Consultando tus tareas…
-        </p>
-      )}
+      {isLoading && !data && <ListSkeleton label="Consultando tus tareas…" />}
 
       {error && (
         <div role="alert" className="rounded-xl bg-danger-soft p-6 text-danger">
@@ -66,15 +62,16 @@ export default function TeacherAssignmentsPage() {
         </div>
       )}
 
-      {data && data.assignments.length === 0 && (
+      {data && controls}
+      {data && items.length === 0 && (
         <p role="status" className="rounded-xl bg-surface p-6">
-          Todavía no tienes tareas publicadas.
+          {assignments.length ? "No hay tareas que coincidan con los filtros." : "Todavía no tienes tareas publicadas."}
         </p>
       )}
 
       {data && (
         <div className="space-y-5">
-          {data.assignments.map((assignment) => (
+          {items.map((assignment) => (
             <article
               key={assignment.id}
               className="rounded-2xl border border-border bg-surface p-6"
@@ -117,6 +114,7 @@ export default function TeacherAssignmentsPage() {
           ))}
         </div>
       )}
+      {data && pagination}
     </section>
   );
 }

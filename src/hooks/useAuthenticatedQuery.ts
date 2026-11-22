@@ -1,11 +1,11 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getApiErrorMessage } from "../lib/apiError";
 import { useAuthStore } from "../stores/authStore";
 
 type QueryLoader<T> = (accessToken: string, signal: AbortSignal) => Promise<T>;
 
-export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
+export function useAuthenticatedQuery<T>(load: QueryLoader<T>, keepData = false) {
   const accessToken = useAuthStore((state) => state.accessToken);
   const logout = useAuthStore((state) => state.logout);
 
@@ -19,10 +19,12 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
 
   const [requestVersion, setRequestVersion] = useState(0);
 
+  const dataRevision = useRef(0);
   useEffect(() => {
     if (!accessToken) return;
 
     const controller = new AbortController();
+    const revision = dataRevision.current;
 
     async function execute(token: string) {
       try {
@@ -30,6 +32,11 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
 
         if (controller.signal.aborted) return;
         if (useAuthStore.getState().accessToken !== token) return;
+
+        if (keepData && revision !== dataRevision.current) {
+          setRequestVersion((current) => current + 1);
+          return;
+        }
 
         setResult({
           loader: load,
@@ -47,13 +54,15 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
           return;
         }
 
-        setResult({
+        setResult((previous) => ({
           loader: load,
           token,
           version: requestVersion,
-          data: null,
+          data: keepData && previous?.loader === load && previous.token === token
+            ? previous.data
+            : null,
           error: getApiErrorMessage(error),
-        });
+        }));
       }
     }
 
@@ -62,19 +71,21 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
     return () => {
       controller.abort();
     };
-  }, [accessToken, logout, load, requestVersion]);
+  }, [accessToken, logout, load, requestVersion, keepData]);
 
   function reload() {
     setRequestVersion((current) => current + 1);
   }
 
   function updateData(update: (current: T) => T) {
+    if (keepData) dataRevision.current++;
+
     setResult((current) => {
       if (
         !current ||
         current.loader !== load ||
         current.token !== accessToken ||
-        current.version !== requestVersion ||
+        (!keepData && current.version !== requestVersion) ||
         current.data === null
       ) {
         return current;
@@ -87,13 +98,14 @@ export function useAuthenticatedQuery<T>(load: QueryLoader<T>) {
     });
   }
 
-  const isCurrentResult =
-    result?.token === accessToken && result?.loader === load && result?.version === requestVersion;
+  const sameQuery = result?.token === accessToken && result?.loader === load;
+  const isCurrentResult = sameQuery && result.version === requestVersion;
+  const isLoading = Boolean(accessToken) && !isCurrentResult;
 
   return {
-    data: isCurrentResult ? result.data : null,
+    data: sameQuery && (keepData || isCurrentResult) ? result.data : null,
     error: isCurrentResult ? result.error : null,
-    isLoading: Boolean(accessToken) && !isCurrentResult,
+    isLoading,
     reload,
     updateData,
   };

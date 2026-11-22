@@ -15,11 +15,12 @@ export default function Pagination({
       aria-label="Paginación"
       className="my-5 flex flex-wrap items-center justify-between gap-3"
     >
-      <p className="text-sm text-ink/70">
+      <p role="status" className="text-sm text-ink/70">
         {total} resultados · Página {page} de {pages}
       </p>
       <div className="flex gap-2">
         <button
+          type="button"
           className="btn-secondary"
           disabled={page <= 1}
           onClick={() => onChange(page - 1)}
@@ -27,6 +28,7 @@ export default function Pagination({
           Anterior
         </button>
         <button
+          type="button"
           className="btn-secondary"
           disabled={page >= pages}
           onClick={() => onChange(page + 1)}

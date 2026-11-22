@@ -1,3 +1,4 @@
+import PageLoading from "../PageLoading";
 import { useEffect } from "react";
 import type { ReactNode } from "react";
 import { useAuthStore } from "../../stores/authStore";
@@ -19,10 +20,7 @@ export default function SessionGate({ children }: SessionGateProps) {
   if (sessionStatus === "idle" || sessionStatus === "checking") {
     return (
       <main className="flex min-h-dvh items-center justify-center p-6">
-        <div role="status" className="text-center">
-          <p className="text-2xl font-bold text-brand">SGAF</p>
-          <p className="mt-3">Comprobando tu sesión…</p>
-        </div>
+        <PageLoading label="Comprobando tu sesión…" />
       </main>
     );
   }

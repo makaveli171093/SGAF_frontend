@@ -1,3 +1,5 @@
+import UpcomingAssignments from "../components/assignments/UpcomingAssignments";
+import { ListSkeleton, RefreshButton } from "../components/ui/Loading";
 import { Link } from "react-router";
 import { api } from "../lib/axios";
 import { useAuthStore } from "../stores/authStore";
@@ -16,7 +18,7 @@ async function load(token: string, signal: AbortSignal) {
 }
 export default function HomePage() {
   const user = useAuthStore((state) => state.user),
-    { data, error, isLoading, reload } = useAuthenticatedQuery(load);
+    { data, error, isLoading, reload } = useAuthenticatedQuery(load, true);
   if (!user) return null;
   const messages = {
     ADMIN:
@@ -51,11 +53,9 @@ export default function HomePage() {
       )}
       <div className="mb-5 flex items-center justify-between gap-3">
         <h2 className="text-lg font-semibold text-brand">Tu actividad</h2>
-        <button className="btn-secondary" onClick={reload} disabled={isLoading}>
-          Actualizar
-        </button>
+        <RefreshButton busy={isLoading} onClick={reload} />
       </div>
-      {isLoading && <p role="status">Consultando actividad…</p>}
+      {isLoading && !data && <ListSkeleton label="Consultando actividad…" />}
       {error && (
         <p role="alert" className="rounded-xl bg-danger-soft p-5 text-danger">
           {error}
@@ -88,6 +88,9 @@ export default function HomePage() {
             · Bolivia
           </p>
         </>
+      )}
+      {(user.role === "STUDENT" || user.role === "TEACHER") && (
+        <UpcomingAssignments student={user.role === "STUDENT"} />
       )}
       <div className="mt-8 flex flex-wrap gap-3">
         <Link className="btn-secondary" to="/cuenta">

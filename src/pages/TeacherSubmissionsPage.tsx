@@ -1,4 +1,7 @@
-import { useCallback } from "react";
+import { filterField } from "../components/assignments/AssignmentList";
+import { filterSubmissions } from "../lib/assignmentLists";
+import { ListSkeleton, RefreshButton } from "../components/ui/Loading";
+import { useCallback, useState } from "react";
 import { Link, useLocation, useParams } from "react-router";
 import { useAuthenticatedQuery } from "../hooks/useAuthenticatedQuery";
 import { submissionsService } from "../services/submissions";
@@ -71,7 +74,10 @@ function SubmissionsContent({ assignmentId, title }: SubmissionsContentProps) {
   );
 
   const { data, isLoading, error, reload, updateData } =
-    useAuthenticatedQuery(loadSubmissions);
+    useAuthenticatedQuery(loadSubmissions, true);
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState("");
+  const submissions = filterSubmissions(data?.submissions ?? [], query, status);
 
   return (
     <section aria-labelledby="submissions-title">
@@ -94,21 +100,10 @@ function SubmissionsContent({ assignmentId, title }: SubmissionsContentProps) {
           {title && <p className="mt-2 break-words text-ink/70">{title}</p>}
         </div>
 
-        <button
-          type="button"
-          onClick={reload}
-          disabled={isLoading}
-          className="rounded-lg border border-brand px-4 py-2 font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
-        >
-          {isLoading ? "Cargando…" : "Actualizar"}
-        </button>
+        <RefreshButton busy={isLoading} onClick={reload} />
       </div>
 
-      {isLoading && (
-        <p role="status" className="rounded-xl bg-surface p-6">
-          Consultando las entregas…
-        </p>
-      )}
+      {isLoading && !data && <ListSkeleton label="Consultando las entregas…" />}
 
       {error && (
         <div role="alert" className="rounded-xl bg-danger-soft p-6 text-danger">
@@ -124,15 +119,31 @@ function SubmissionsContent({ assignmentId, title }: SubmissionsContentProps) {
         </div>
       )}
 
-      {data && data.submissions.length === 0 && (
+      {data && (
+        <fieldset className="mb-4 grid min-w-0 gap-3 rounded-xl border border-border p-4 sm:grid-cols-2">
+          <legend className="px-2 font-semibold text-brand">Filtrar entregas</legend>
+          <label className="text-sm">Buscar por nombre o matrícula
+            <input type="search" className={filterField} value={query} onChange={(event) => setQuery(event.target.value)} />
+          </label>
+          <label className="text-sm">Calificación
+            <select className={filterField} value={status} onChange={(event) => setStatus(event.target.value)}>
+              <option value="">Todas</option>
+              <option value="pending">Pendientes de calificar</option>
+              <option value="graded">Calificadas</option>
+            </select>
+          </label>
+        </fieldset>
+      )}
+      {data && <p role="status" className="mb-4 text-sm text-ink/70">{submissions.length} entregas</p>}
+      {data && submissions.length === 0 && (
         <p role="status" className="rounded-xl bg-surface p-6">
-          Todavía no hay entregas registradas para esta tarea.
+          {data.submissions.length ? "No hay entregas que coincidan con los filtros." : "Todavía no hay entregas registradas para esta tarea."}
         </p>
       )}
 
       {data && (
         <div className="space-y-5">
-          {data.submissions.map((submission) => {
+          {submissions.map((submission) => {
             const fileUrl = getWebUrl(submission.fileUrl);
 
             return (

@@ -1,3 +1,4 @@
+import { ListSkeleton, RefreshButton } from "../components/ui/Loading";
 import { useTeacherGroups } from "../hooks/useTeacherGroups";
 import type { DayOfWeek } from "../types/enrollments";
 import type { AcademicPeriodStatus } from "../types/groups";
@@ -30,8 +31,9 @@ function formatTime(value: string) {
 }
 
 export default function TeacherGroupsPage() {
-  const { groups, isLoading, error, reload, registerCreatedAssignment } =
+  const { data, isLoading, error, reload, registerCreatedAssignment } =
     useTeacherGroups();
+  const groups = data?.groups ?? [];
 
   return (
     <section aria-labelledby="teacher-groups-title">
@@ -49,24 +51,10 @@ export default function TeacherGroupsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={reload}
-          disabled={isLoading}
-          className="rounded-lg border border-brand px-4 py-2 text-sm font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
-        >
-          {isLoading ? "Cargando…" : "Actualizar"}
-        </button>
+        <RefreshButton busy={isLoading} onClick={reload} />
       </div>
 
-      {isLoading && (
-        <p
-          role="status"
-          className="rounded-xl border border-border bg-surface p-6"
-        >
-          Consultando tus grupos…
-        </p>
-      )}
+      {isLoading && !data && <ListSkeleton label="Consultando tus grupos…" />}
 
       {!isLoading && error && (
         <div role="alert" className="rounded-xl bg-danger-soft p-6 text-danger">
@@ -84,7 +72,7 @@ export default function TeacherGroupsPage() {
         </div>
       )}
 
-      {!isLoading && !error && groups.length === 0 && (
+      {data && groups.length === 0 && (
         <p
           role="status"
           className="rounded-xl border border-border bg-surface p-6"
@@ -93,7 +81,7 @@ export default function TeacherGroupsPage() {
         </p>
       )}
 
-      {!isLoading && !error && groups.length > 0 && (
+      {data && groups.length > 0 && (
         <div className="grid gap-5 xl:grid-cols-2">
           {groups.map((group) => (
             <article
