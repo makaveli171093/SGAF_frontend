@@ -1,3 +1,5 @@
+import { Spinner } from "../ui/Loading";
+import { useToast } from "../../lib/toast";
 import { useConfirmation } from "../../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
@@ -25,6 +27,7 @@ export default function SubmissionForm({
 }: SubmissionFormProps) {
   const confirm = useConfirmation();
   const user = useAuthStore((state) => state.user);
+  const notify = useToast();
   const [serverError, setServerError] = useState<string | null>(null);
   const requestInProgress = useRef(false);
 
@@ -78,6 +81,7 @@ export default function SubmissionForm({
         return;
       }
 
+      notify("success", "Entrega registrada.");
       onSubmitted(response.submission);
     } catch (error: unknown) {
       if (useAuthStore.getState().accessToken !== accessToken) {
@@ -93,11 +97,11 @@ export default function SubmissionForm({
         axios.isAxiosError(error) &&
         (!error.response || error.response.status >= 500);
 
-      setServerError(
-        uncertainResult
+      const message = uncertainResult
           ? "No pudimos confirmar el resultado. Conserva una copia de tu respuesta y pulsa Actualizar para comprobar si la entrega quedó registrada antes de reenviar."
-          : getApiErrorMessage(error),
-      );
+          : getApiErrorMessage(error);
+      setServerError(message);
+      notify("error", message);
     } finally {
       requestInProgress.current = false;
     }
@@ -198,8 +202,9 @@ export default function SubmissionForm({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-lg bg-brand px-4 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
       >
+        {isSubmitting && <Spinner />}
         {isSubmitting ? "Enviando…" : "Entregar tarea"}
       </button>
     </form>

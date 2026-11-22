@@ -1,3 +1,6 @@
+import { useCurrentTime } from "../hooks/useCurrentTime";
+import { useAssignmentList } from "../components/assignments/AssignmentList";
+import { ListSkeleton, RefreshButton } from "../components/ui/Loading";
 import { useMyAssignments } from "../hooks/useMyAssignments";
 import SubmissionForm from "../components/assignments/SubmissionForm";
 
@@ -30,14 +33,11 @@ function getAttachmentUrl(value: string | null): string | null {
 }
 
 export default function MyAssignmentsPage() {
-  const {
-    assignments,
-    isLoading,
-    error,
-    checkedAt,
-    reload,
-    registerSubmission,
-  } = useMyAssignments();
+  const { data, isLoading, error, reload, registerSubmission } = useMyAssignments();
+  const assignments = data?.assignments ?? [];
+  const checkedAt = data?.checkedAt ?? 0;
+  const now = useCurrentTime();
+  const { items, controls, pagination } = useAssignmentList(assignments, now, true);
 
   return (
     <section aria-labelledby="assignments-title">
@@ -55,24 +55,10 @@ export default function MyAssignmentsPage() {
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={reload}
-          disabled={isLoading}
-          className="rounded-lg border border-brand px-4 py-2 text-sm font-medium text-brand hover:bg-accent-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
-        >
-          {isLoading ? "Cargando…" : "Actualizar"}
-        </button>
+        <RefreshButton busy={isLoading} onClick={reload} />
       </div>
 
-      {isLoading && (
-        <p
-          role="status"
-          className="rounded-xl border border-border bg-surface p-6"
-        >
-          Consultando tus tareas…
-        </p>
-      )}
+      {isLoading && !data && <ListSkeleton label="Consultando tus tareas…" />}
 
       {!isLoading && error && (
         <div role="alert" className="rounded-xl bg-danger-soft p-6 text-danger">
@@ -90,27 +76,28 @@ export default function MyAssignmentsPage() {
         </div>
       )}
 
-      {!isLoading && !error && (
+      {data && (
         <>
           <p className="mb-4 text-sm text-ink/70">
             Última consulta: {formatDate(checkedAt)}
             {" · "}Hora de Bolivia
           </p>
 
-          {assignments.length === 0 ? (
+          {controls}
+          {items.length === 0 ? (
             <p
               role="status"
               className="rounded-xl border border-border bg-surface p-6"
             >
-              No hay tareas para tus inscripciones activas.
+              {assignments.length ? "No hay tareas que coincidan con los filtros." : "No hay tareas para tus inscripciones activas."}
             </p>
           ) : (
             <div className="space-y-5">
-              {assignments.map((assignment) => {
+              {items.map((assignment) => {
                 const submission = assignment.submissions[0];
 
                 const isExpired =
-                  new Date(assignment.dueDate).getTime() < checkedAt;
+                  new Date(assignment.dueDate).getTime() < now;
 
                 const attachmentUrl = getAttachmentUrl(
                   submission?.fileUrl ?? null,
@@ -246,6 +233,7 @@ export default function MyAssignmentsPage() {
               })}
             </div>
           )}
+          {pagination}
         </>
       )}
     </section>

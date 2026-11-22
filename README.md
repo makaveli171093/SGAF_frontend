@@ -49,3 +49,21 @@ npm run lint	Ejecuta Oxlint.
 
 Despliegue
 El proyecto incluye vercel.json para el despliegue como aplicación de una sola página (SPA). Configura VITE_API_URL en el entorno de despliegue y asegúrate de que el backend sea accesible desde el navegador.
+
+## Experiencia de tareas
+
+Estudiantes y docentes pueden buscar tareas, filtrar por materia y estado y ordenar por plazo o título. Las listas muestran seis tareas por página. En la revisión docente, el filtro de pendientes se refiere a entregas recibidas que aún no tienen calificación. La búsqueda acepta nombre y matrícula.
+
+El inicio muestra tareas con vencimiento en los próximos siete días y sus fechas en hora de Bolivia. Para estudiantes se cuentan las tareas sin entrega registrada. Para docentes se cuentan las tareas publicadas cuyo plazo sigue abierto.
+
+El frontend usa los contratos existentes de tareas, entregas, grupos docentes y resumen de cuenta. Los filtros y la paginación funcionan sobre los datos devueltos por la API. Quedan pendientes la paginación del backend, cuando la API exponga un contrato para solicitar páginas y totales, y las notificaciones persistentes, que requieren almacenamiento y seguimiento de lectura.
+
+### Pruebas de tareas
+
+```sh
+npm ci
+npx playwright install chromium
+npm test
+```
+
+Playwright levanta Vite y simula las respuestas de la API en el navegador. Ejecuta también `npm run build` y `npm run lint` para verificar la compilación y el análisis estático.

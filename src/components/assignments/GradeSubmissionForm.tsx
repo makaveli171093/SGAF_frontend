@@ -1,3 +1,5 @@
+import { Spinner } from "../ui/Loading";
+import { useToast } from "../../lib/toast";
 import { useConfirmation } from "../../lib/confirmation";
 import axios from "axios";
 import { useRef, useState } from "react";
@@ -22,8 +24,8 @@ export default function GradeSubmissionForm({
   onGraded,
 }: GradeSubmissionFormProps) {
   const confirm = useConfirmation();
+  const notify = useToast();
   const [serverError, setServerError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const requestInProgress = useRef(false);
 
   const {
@@ -43,7 +45,6 @@ export default function GradeSubmissionForm({
     if (requestInProgress.current) return;
 
     setServerError(null);
-    setSuccess(null);
 
     const { accessToken, user } = useAuthStore.getState();
 
@@ -80,6 +81,7 @@ export default function GradeSubmissionForm({
         return;
       }
 
+      notify("success", "Calificación guardada.");
       onGraded(response.submission);
 
       reset({
@@ -90,7 +92,6 @@ export default function GradeSubmissionForm({
         feedback: response.submission.feedback ?? "",
       });
 
-      setSuccess(response.message);
     } catch (error: unknown) {
       if (useAuthStore.getState().accessToken !== accessToken) {
         return;
@@ -105,11 +106,11 @@ export default function GradeSubmissionForm({
         axios.isAxiosError(error) &&
         (!error.response || error.response.status >= 500);
 
-      setServerError(
-        uncertainResult
+      const message = uncertainResult
           ? "No pudimos confirmar el resultado. Conserva tus comentarios y pulsa Actualizar para revisar la calificación guardada antes de reenviar."
-          : getApiErrorMessage(error),
-      );
+          : getApiErrorMessage(error);
+      setServerError(message);
+      notify("error", message);
     } finally {
       requestInProgress.current = false;
     }
@@ -176,20 +177,13 @@ export default function GradeSubmissionForm({
         </p>
       )}
 
-      {success && (
-        <p
-          role="status"
-          className="rounded-lg bg-success-soft p-4 text-success"
-        >
-          {success}
-        </p>
-      )}
 
       <button
         type="submit"
         disabled={isSubmitting}
-        className="rounded-lg bg-brand px-4 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
+        className="inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-3 font-medium text-white hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
       >
+        {isSubmitting && <Spinner />}
         {isSubmitting ? "Guardando…" : "Guardar calificación"}
       </button>
     </form>

@@ -1,4 +1,4 @@
-export default function NexoraLogo() {
+export default function NexoraLogo({ markOnly = false }: { markOnly?: boolean }) {
   return (
     <span className="inline-flex items-center gap-3">
       <svg
@@ -19,7 +19,7 @@ export default function NexoraLogo() {
         <circle cx="34" cy="14" r="4" fill="#b68a3d" />
       </svg>
 
-      <span>
+      {!markOnly && <span>
         <span className="block text-xl font-bold tracking-[0.16em] text-brand">
           NEXORA
         </span>
@@ -27,7 +27,7 @@ export default function NexoraLogo() {
         <span className="block text-xs tracking-wide text-ink/70">
           Formación técnica · Bolivia
         </span>
-      </span>
+      </span>}
     </span>
   );
 }
